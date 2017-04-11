@@ -10,6 +10,12 @@ namespace KSU_Online_Bookstore.Controllers
     {
         public IActionResult Index()
         {
+            BooksRepositoryController b = new BooksRepositoryController();
+            List<Models.Book> books = b.getBooks();
+            foreach(Models.Book book in books)
+            {
+                System.Diagnostics.Debug.WriteLine("Book: " + book.ISBN);
+            }
             return View();
         }
 
