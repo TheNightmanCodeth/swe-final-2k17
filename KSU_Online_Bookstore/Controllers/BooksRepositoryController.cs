@@ -21,7 +21,7 @@ namespace KSU_Online_Bookstore.Controllers
             string csv_path = @"C:\Users\Joe\Documents\Projects\swe\KSU_Online_Bookstore\assets\books.csv";
 
             //Here we create a TextFieldParser using the path above to read the csv
-            TextFieldParser parer = new TextFieldParser(csv_path);
+            //TextFieldParser parer = new TextFieldParser(csv_path);
 
             //Create empty List of books to populate for return
             List<Book> books = new List<Book>();
@@ -32,9 +32,13 @@ namespace KSU_Online_Bookstore.Controllers
                 parser.TextFieldType = FieldType.Delimited;
                 parser.SetDelimiters(new string[] { "," });
 
-                while (parser.PeekChars(1) != null)
+                while (true)
                 {
                     string[] fields = parser.ReadFields();
+                    if (fields == null) 
+                    {
+                        break;
+                    }
                     Book book = arrayToBook(fields);
                     books.Add(book);
                 }                
