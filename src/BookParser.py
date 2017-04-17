@@ -43,3 +43,15 @@ class BookParser:
         if len(results) < 1:
             return -1
         return results
+
+    #Searches through list of books for ISBN match
+    def search_by_isbn(self, isbn):
+        results = []
+        books = self.csv_to_dict_list()
+        for book in books:
+            book_isbn = book[self.ISBN]
+            if book_isbn == isbn:
+                results.append(book)
+        if len(results) < 1:
+            return -1
+        return results

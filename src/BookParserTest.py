@@ -13,8 +13,8 @@ def should_ret_list():
     else:
         print result +'FAIL'
 
-''' Test title search '''
-#Will pass if the search_by_title fun returns one result (expected behavior)
+''' Test search '''
+#Will pass if the search_by_title fun returns one result
 def should_ret_one_result():
     result = 'should_ret_one_result: '
     results = bp.search_by_title("Biotechnology")
@@ -32,6 +32,17 @@ def should_ret_nothing():
     else:
         print result +'FAIL'
 
+#Will pass if the search_by_title fun returns one result
+def should_ret_one_isbn():
+    result = 'should_ret_one_isbn: '
+    search = bp.search_by_isbn("978-0073511450")
+    if len(search) == 1:
+        search_res = search[0]
+        if search_res[bp.TITLE] == "Essentials of Economics 3rd Edition":
+            print result +'PASS'
+        else:
+            print result +'FAIL'
+
 ''' Test dict index values '''
 #Will pass if the value at the given index value matches the value name
 def should_ret_value():
@@ -48,6 +59,7 @@ def should_ret_value():
 def run_all_tests():
     should_ret_list()
     should_ret_one_result()
+    should_ret_one_isbn()
     should_ret_nothing()
     should_ret_value()
 
