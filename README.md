@@ -1,32 +1,90 @@
-## Yo
+# PYHTON BITCHES!!!!!!!!  
+No time for VS BS amirite?!?
 
 # TDD
 TDD: Test Driven Development
 
-What's TDD?? Google it!
-In short:
-Write tests BEFORE code!
+What's TDD?? Google it!  
+
+In short:  
+Write tests BEFORE coding!
 
 # How do I write tests???
 
-EZPZ, Create a //Test.py file for the module you're writing
-create a method for the feature you're testing.  
-For example, if you're writing the function for turning the books file into a list,
-you would make a file called BookParser.py and BookParserTest.py.  
-Inside the BookParserTest.py, you'll create a BookParser object.  
-Then, make a function called `should_ret_list`, since you're testing that the  
-BookParser will return a list.  
-Think, what should the module I'm testing do??  
+Basically you'll write a test method before each method you write. The method will run the implementation and confirm the output.  
 
-In this case, it should return a list. EZ.
+# Example!!
 
-Make a variable to store the list, and make sure it's larger than 0!!  
-`if len(list) > 0:`  
-print to console the name of the method, and PASS.
+Let's say we're writing a method called `csv_to_dict_list()` in the class `BookParser`  
+The method is expected to return a list of books.  
+In order to test this, we'll create a seperate Test file for the `BookParser` class.  
 
-If that doesn't make any sense just check out my actual tests and hopefully  
-you'll understand the actual code.
+So inside of `BookParserTest.py` we'll reference the class and make a method called `should_ret_list()`  
+
+It'll look something like this:  
+```python
+from BookParser import BookParser
+bp = BookParser()
+
+def should_ret_list():
+    result = 'should_ret_list: '
+    book_list = bp.csv_to_dict_list()
+    if len(book_list) > 0:
+        print result +'PASS'
+    else:
+        print result +'FAIL'
+```
+
+In order to run the tests, we should create a new method called `run_all_tests` and call each test method  
+So in this case, it would look like:  
+
+```python
+def run_all_tests():
+    should_ret_list()
+```
+
+And lastly, we need to tell python to actually run that method! When you run a script from python, it doesn't know what method to call.  
+
+We tell it to run `run_all_tests()` like so:
+
+```python
+if __name__ == "__main__":
+    run_all_tests()
+```
+
+Once that is at the end of the test script, we can run it from the command like like so:  
+`python BookParserTest.py`
 
 # I wrote the tests, now what??
 
 Well now, you write the method!
+
+A python crash course:  
+We'll continue with the `BookParser` example:  
+
+First, make a python file called `BookParser.py`  
+Next, you have to declare the class. The class name, obviously, should match the name of the file.  
+
+So in this case:  
+`BookParser.py`  
+```python
+class BookParser:
+    #Indent after the class declaration!
+```
+
+To define functions, you:  
+`BookParser.py`  
+
+```python
+class BookParser:
+    val = 0 # an instance variable
+    # This is a method:
+    def this_is_a_method(self):
+        #Make sure to indent after the method dec.
+        print 'Fuck'
+        #If the method returns a value, just return it.
+        #You don't need to define return types anywhere!
+        return 'Fuck'
+```
+
+Methods within a class need to take `self` as an argument. This is not reflected in any method calls, though.
