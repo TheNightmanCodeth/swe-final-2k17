@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <head>
-  <h3>It works, boi</h3>
+  <form action="/" method="post">
+    ISBN:<br>
+    <input type="text" name="ISBN"><br>
+    <input type="submit" value="Search">
+  </form>
 </head>
 <body>
-
+  {% if results %}
+    {% for book in results %}
+      <div class="book">
+        {% set isbn = book[0] %}
+        {% set name = book[1] %}
+        <h3>{{ name }}</h3>
+      </div>
+    {% endfor %}
+  {% else %}
+    
+  {% endif %}
 </body>
