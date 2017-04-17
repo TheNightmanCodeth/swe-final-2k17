@@ -40,6 +40,6 @@ class BookParser:
             book_title = book[self.TITLE]
             if title in book_title:
                 results.append(book)
-        if len(books) < 1:
+        if len(results) < 1:
             return -1
         return results
