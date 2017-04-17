@@ -23,6 +23,15 @@ def should_ret_one_result():
     else:
         print result +'FAIL'
 
+#Will pass if the search_by_title fun returns nothing
+def should_ret_nothing():
+    result = 'should_ret_nothing: '
+    search = bp.search_by_title("this string won't match!")
+    if search == -1:
+        print result +'PASS'
+    else:
+        print result +'FAIL'
+
 ''' Test dict index values '''
 #Will pass if the value at the given index value matches the value name
 def should_ret_value():
@@ -39,6 +48,7 @@ def should_ret_value():
 def run_all_tests():
     should_ret_list()
     should_ret_one_result()
+    should_ret_nothing()
     should_ret_value()
 
 if __name__ == "__main__":
