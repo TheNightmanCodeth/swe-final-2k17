@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <head>
   <form action="/" method="post">
-    ISBN:
-    <input type="text" name="ISBN"><br>
-    Professor:
-    <input type="text" name="prof"><br>
-    <input type="submit" value="Search">
+    {{ form.csrf_token }}
+    {{ form.isbn.label }} {{ form.isbn(size=20) }}
+    {{ form.prof.label }} {{ form.prof(size=30) }}
+    <input type="submit" value="Go">
   </form>
 </head>
 <body>

@@ -1,5 +1,6 @@
 ''' This file is where we define all routes and site-related logic'''
 from flask import Flask, render_template, url_for, request, redirect
+from SearchForm import SearchForm
 from BookParser import BookParser
 
 app = Flask(__name__, static_url_path='/static')
@@ -15,31 +16,32 @@ def no_dupes(list1, list2):
 #Routes
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    if request.method == 'POST':
+    form = SearchForm(request.form)
+    if request.method == 'POST' and form.validate():
         #this method is called when the '/' endpoint receives a POST request
+        print 'Hello form!'
         results = []
-        form = request.form
-        #TODO: Add search for other keywords
         bp = BookParser()
-        if request.form.get('ISBN', None) is not None:
-            isbn = request.form.get('ISBN', None)
+
+        if form.isbn.data is not None:
+            isbn = form.isbn.data
             results_isbn = bp.search_by_isbn(isbn)
             if results_isbn is not -1:
                 for book in results_isbn:
                     if book not in results:
                         results.append(book)
-        if request.form.get('prof', None) is not None:
-            print 'form'
-            prof = request.form.get('prof', None)
+        if form.prof.data is not None:
+            prof = form.prof.data
             results_prof = bp.search_by_prof(prof)
             if results_prof is not -1:
                 for book in results_prof:
                     if book not in results:
                         results.append(book)
 
-        return render_template('main.html', results=results)
 
-    return render_template('main.html')
+        return render_template('main.html', form=form, results=results)
+
+    return render_template('main.html', form=form)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
