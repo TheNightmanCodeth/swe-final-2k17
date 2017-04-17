@@ -51,6 +51,7 @@ class BookParser:
         for book in books:
             book_isbn = book[self.ISBN]
             if book_isbn == isbn:
+                print book[self.TITLE]
                 results.append(book)
         if len(results) < 1:
             return -1
@@ -62,8 +63,9 @@ class BookParser:
         books = self.csv_to_dict_list()
         for book in books:
             book_prof = book[self.PROFESSOR]
-            if prof in book_prof:
-                results.append(book)
+            if prof is not ' ':
+                if prof in book_prof:
+                    results.append(book)
         if len(results) < 1:
             return -1
         return results

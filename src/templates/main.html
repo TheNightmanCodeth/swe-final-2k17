@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <head>
   <form action="/" method="post">
-    ISBN:<br>
+    ISBN:
     <input type="text" name="ISBN"><br>
+    Professor:
+    <input type="text" name="prof"><br>
     <input type="submit" value="Search">
   </form>
 </head>
@@ -13,9 +15,10 @@
         {% set isbn = book[0] %}
         {% set name = book[1] %}
         <h3>{{ name }}</h3>
+        <h2>{{ isbn }}</h3>
       </div>
     {% endfor %}
   {% else %}
-    
+
   {% endif %}
 </body>
