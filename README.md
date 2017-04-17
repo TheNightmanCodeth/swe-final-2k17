@@ -88,3 +88,20 @@ class BookParser:
 ```
 
 Methods within a class need to take `self` as an argument. This is not reflected in any method calls, though.
+
+# Running the site
+The framework we're using is a 'microframework' for building web apps with python.  
+It's called `Flask`. To run the site, simply start the `app.py` file:  
+`python app.py`  
+  
+If you get an error saying something along the lines of: "Module 'Flask' not found", you'll need to install flask!  
+Lucky for you, an idiot could do it!  
+
+When you installed python on your computer it came with a nifty program called `pip`.  
+`pip` is a package manager for python. You can install flask by opening your admin command prompt or PowerShell and running:  
+`pip install flask`  
+
+If you don't have pip installed, you'll need to reinstall python. Woops.
+
+Anyway once the site is running, open up a web browser and head to: `http://localhost:5000/`  
+There, you'll be greeted with the site's index page. Check the command prompt for debugger output!
