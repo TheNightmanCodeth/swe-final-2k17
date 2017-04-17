@@ -19,7 +19,6 @@ def home():
     form = SearchForm(request.form)
     if request.method == 'POST' and form.validate():
         #this method is called when the '/' endpoint receives a POST request
-        print 'Hello form!'
         results = []
         bp = BookParser()
 
@@ -37,7 +36,13 @@ def home():
                 for book in results_prof:
                     if book not in results:
                         results.append(book)
-
+        if form.title.data is not None:
+            title = form.title.data
+            results_title = bp.search_by_title(title)
+            if results_title is not -1:
+                for book in results_title:
+                    if book not in results:
+                        results.append(book)
 
         return render_template('main.html', form=form, results=results)
 

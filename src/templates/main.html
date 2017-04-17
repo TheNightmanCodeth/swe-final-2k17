@@ -1,20 +1,55 @@
 <!DOCTYPE html>
 <head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link href="main.css" rel="stylesheet">
+
   <form action="/" method="post">
     {{ form.csrf_token }}
-    {{ form.isbn.label }} {{ form.isbn(size=20) }}
-    {{ form.prof.label }} {{ form.prof(size=30) }}
+    {{ form.isbn.label }}: {{ form.isbn(size=20) }}<br><br>
+    {{ form.prof.label }}: {{ form.prof(size=30) }}<br><br>
+    {{ form.title.label }}: {{ form.title(size=30) }}<br><br>
     <input type="submit" value="Go">
   </form>
 </head>
 <body>
   {% if results %}
     {% for book in results %}
-      <div class="book">
-        {% set isbn = book[0] %}
-        {% set name = book[1] %}
-        <h3>{{ name }}</h3>
-        <h2>{{ isbn }}</h3>
+    {% set isbn = book[0] %}
+    {% set name = book[1] %}
+    {% set stock_new = book[9] %}
+    {% set stock_used = book[10] %}
+    {% set stock_rent = book[11] %}
+    {% set stock_ebook = book[12] | int %}
+    {% if stock_ebook > 1 %}
+      {% set stock_ebook = 'Yes' %}
+    {% else %}
+      {% set stock_ebook = 'No' %}
+    {% endif %}
+    {% set price_used = book[14] %}
+    {% set price_new = book[13] %}
+    {% set price_rent = book[15] %}
+    {% set price_ebook = book[16] %}
+      <div class="row">
+        <div class="col-md-1 col-md-offset-1">
+          <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}"/>
+        </div>
+        <div class="col-md-10">
+          <h3>{{ name }}</h3>
+          <div class="row">
+            <div class="col-md-12">
+              <p>ISBN: {{ isbn }}</p>
+            </div>
+            <div class="col-md-12">
+              <p>Price New: {{ price_new }}  |  Price Used: {{ price_used }}  |  Price Rent: {{ price_rent }}  |  Price Ebook: {{ price_ebook }}</p>
+            </div>
+            <div class="col-md-5">
+              <p>Stock New: {{ stock_new }}  |  Stock Used: {{ stock_used }}  |  Stock Rent: {{ stock_rent }}  |  Stock Ebook: {{ stock_ebook }} &nbsp;&nbsp;&nbsp;&nbsp; <img width=20 height=20 src="static/img/cart.png" alt="cart" /></p>
+            </div>
+            <div class="col-md-1">
+
+            </div>
+          </div>
+        </div>
       </div>
     {% endfor %}
   {% else %}
