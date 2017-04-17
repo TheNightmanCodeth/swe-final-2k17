@@ -16,8 +16,12 @@ def should_ret_list():
 ''' Test title search '''
 #Will pass if the search_by_title fun returns one result (expected behavior)
 def should_ret_one_result():
-
-    pass
+    result = 'should_ret_one_result: '
+    results = bp.search_by_title("Biotechnology")
+    if len(results) == 1:
+        print result +'PASS'
+    else:
+        print result +'FAIL'
 
 ''' Test dict index values '''
 #Will pass if the value at the given index value matches the value name
@@ -34,6 +38,7 @@ def should_ret_value():
 #It runs all test methods
 def run_all_tests():
     should_ret_list()
+    should_ret_one_result()
     should_ret_value()
 
 if __name__ == "__main__":

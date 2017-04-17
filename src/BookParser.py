@@ -34,4 +34,12 @@ class BookParser:
 
     #Searches through list of books for title match
     def search_by_title(self, title):
-        pass
+        results = []
+        books = self.csv_to_dict_list()
+        for book in books:
+            book_title = book[self.TITLE]
+            if title in book_title:
+                results.append(book)
+        if len(books) < 1:
+            return -1
+        return results
