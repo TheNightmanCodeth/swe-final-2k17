@@ -93,7 +93,7 @@ Methods within a class need to take `self` as an argument. This is not reflected
 The framework we're using is a 'microframework' for building web apps with python.  
 It's called `Flask`. To run the site, simply start the `app.py` file:  
 `python app.py`  
-  
+
 If you get an error saying something along the lines of: "Module 'Flask' not found", you'll need to install flask!  
 Lucky for you, an idiot could do it!  
 
