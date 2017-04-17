@@ -55,3 +55,15 @@ class BookParser:
         if len(results) < 1:
             return -1
         return results
+
+    #Searches through list of books for professor match
+    def search_by_prof(self, prof):
+        results = []
+        books = self.csv_to_dict_list()
+        for book in books:
+            book_prof = book[self.PROFESSOR]
+            if prof in book_prof:
+                results.append(book)
+        if len(results) < 1:
+            return -1
+        return results
