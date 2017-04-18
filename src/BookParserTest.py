@@ -52,6 +52,24 @@ def should_ret_one_prof():
     else:
         print result +'FAIL'
 
+#Will pass if the search_by_class fun returns one result for SWE
+def should_ret_one_class():
+    result = 'should_ret_one_class: '
+    search = bp.search_by_class("SWE")
+    if len(search) == 1:
+        print result +'PASS'
+    else:
+        print result +'FAIL'
+
+def should_ret_sixteen_kw():
+    result = 'should_ret_16_description: '
+    search = bp.search_by_desc("No description available")
+    if len(search) == 16:
+        print search
+        print result +'PASS'
+    else:
+        print result +'FAIL'
+
 ''' Test dict index values '''
 #Will pass if the value at the given index value matches the value name
 def should_ret_value():
@@ -70,6 +88,8 @@ def run_all_tests():
     should_ret_one_result()
     should_ret_one_isbn()
     should_ret_one_prof()
+    should_ret_one_class()
+    should_ret_sixteen_kw()
     should_ret_nothing()
     should_ret_value()
 

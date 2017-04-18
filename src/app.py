@@ -43,6 +43,20 @@ def home():
                 for book in results_title:
                     if book not in results:
                         results.append(book)
+        if form.classs.data is not None:
+            classs = form.classs.data
+            results_class = bp.search_by_class(classs)
+            if results_class is not -1:
+                for book in results_class:
+                    if book not in results:
+                        results.append(book)
+        if form.keyword.data is not None:
+            keyword = form.keyword.data
+            results_kw = bp.search_by_desc(keyword)
+            if results_kw is not -1:
+                for book in results_kw:
+                    if book not in results:
+                        results.append(book)
 
         return render_template('main.html', form=form, results=results)
 

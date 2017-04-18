@@ -1,5 +1,9 @@
 ''' Parses books.csv into python structs '''
 import csv, os
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 class BookParser:
     #Dict object keys:
@@ -38,7 +42,7 @@ class BookParser:
         books = self.csv_to_dict_list()
         for book in books:
             book_title = book[self.TITLE]
-            if title in book_title:
+            if title.encode('utf-8').strip() in book_title:
                 results.append(book)
         if len(results) < 1:
             return -1
@@ -51,7 +55,6 @@ class BookParser:
         for book in books:
             book_isbn = book[self.ISBN]
             if book_isbn == isbn:
-                print book[self.TITLE]
                 results.append(book)
         if len(results) < 1:
             return -1
@@ -64,7 +67,33 @@ class BookParser:
         for book in books:
             book_prof = book[self.PROFESSOR]
             if prof is not ' ':
-                if prof in book_prof:
+                if prof.encode('utf-8').strip() in book_prof:
+                    results.append(book)
+        if len(results) < 1:
+            return -1
+        return results
+
+    #Searches through list of books for class match
+    def search_by_class(self, classs):
+        results = []
+        books = self.csv_to_dict_list()
+        for book in books:
+            book_class = book[self.CLASS]
+            if classs is not None:
+                if classs.encode('utf-8').strip() in book_class:
+                    results.append(book)
+        if len(results) < 1:
+            return -1
+        return results
+
+    #searches through list of books for description keywords
+    def search_by_desc(self, keyword):
+        results = []
+        books = self.csv_to_dict_list()
+        for book in books:
+            book_desc = book[self.DESCRIPTION]
+            if keyword is not None:
+                if keyword.encode('utf-8').strip() in book_desc:
                     results.append(book)
         if len(results) < 1:
             return -1

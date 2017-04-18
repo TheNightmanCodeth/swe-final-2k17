@@ -1,0 +1,22 @@
+#wrap:after {
+      display: block;
+      height: 0px;
+      clear: both;
+      float: none;
+    }
+#wrap div {
+  float: left;
+  word-break: break-all;
+}
+#one {
+  width: 40%;
+  background-color: red;
+}
+#two {
+  width: 20%;
+  background-color: yellow;
+}
+#three {
+  width: 40%;
+  background-color: blue;
+}
