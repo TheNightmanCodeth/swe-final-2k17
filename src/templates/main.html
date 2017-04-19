@@ -18,9 +18,12 @@
     {% set price_new = book[13] %}
     {% set price_rent = book[15] %}
     {% set price_ebook = book[16] %}
+    {% set description = book[17] %}
       <div class="row">
-        <div class="col-md-1 col-md-offset-1">
-          <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}"/>
+        <div class="col-md-1" style="margin-left: 10px">
+          <a href="{{ url_for('home') }}">
+            <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}">
+          </a>
         </div>
         <div class="col-md-10">
           <h3>{{ name }}</h3>
@@ -28,14 +31,8 @@
             <div class="col-md-12">
               <p>ISBN: {{ isbn }}</p>
             </div>
-            <div class="col-md-12">
-              <p>Price New: {{ price_new }}  |  Price Used: {{ price_used }}  |  Price Rent: {{ price_rent }}  |  Price Ebook: {{ price_ebook }}</p>
-            </div>
-            <div class="col-md-5">
-              <p>Stock New: {{ stock_new }}  |  Stock Used: {{ stock_used }}  |  Stock Rent: {{ stock_rent }}  |  Stock Ebook: {{ stock_ebook }} &nbsp;&nbsp;&nbsp;&nbsp; <img width=20 height=20 src="static/img/cart.png" alt="cart" /></p>
-            </div>
-            <div class="col-md-1">
-
+            <div class="col-md-7">
+              <p>{{ description | truncate(300) }}</p>
             </div>
           </div>
         </div>

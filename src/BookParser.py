@@ -3,7 +3,7 @@ import csv, os
 import sys
 
 reload(sys)
-sys.setdefaultencoding('utf8')
+sys.setdefaultencoding('utf-8')
 
 class BookParser:
     #Dict object keys:
@@ -33,6 +33,8 @@ class BookParser:
             reader = csv.reader(cvfile, delimiter=',')
             books = []
             for book in reader:
+                #Remove some weird utf-8 characters from description.
+                book[17] = book[17].decode('latin-1')
                 books.append(book)
             return books
 

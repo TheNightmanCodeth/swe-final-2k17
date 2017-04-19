@@ -62,5 +62,13 @@ def home():
 
     return render_template('main.html', form=form)
 
+#Route for book details page
+@app.route('/book/<isbn>', methods=['GET'])
+def book_details(isbn):
+    bp = BookParser()
+    form = SearchForm(request.form)
+    book = bp.search_by_isbn(isbn)
+    return render_template('book.html', book=book[0], form=form)
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
