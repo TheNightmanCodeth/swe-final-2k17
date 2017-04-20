@@ -1,7 +1,101 @@
 {% extends "head.html" %}
 
 {% block content %}
-{% if book %}
-  {{ book[0] }}
-{% endif %}
+  {% if book %}
+    <div class="row">
+      <div class="col-md-1" style="margin-left: 50px">
+        <!-- For some reason relative links don't work in here so use the raw file from the github -->
+        <img src="https://github.com/TheNightmanCodeth/swe-final-2k17/raw/python/src/static/covers/{{ book[0] }}.jpg" width="200" height="300">
+      </div>
+      <div class="col-md-8 col-md-offset-1">
+        <p>{{ book[17] }}</p>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px; margin-left: 35px">
+      <div class="col-md-3">
+        <div class="row">
+          <div class="col-md-12" style="">
+            <p>{{ book[1] }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <p>By: {{ book[2] }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <p>{{ book[0] }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        {% set stock_ebook = book[12] | int %}
+        {% if stock_ebook > 1 %}
+          {% set stock_ebook = 'Yes' %}
+        {% else %}
+          {% set stock_ebook = 'No' %}
+        {% endif %}
+        <div class="row">
+          {% if book[13] == 0 %}
+            {% set new_price = 'N/A' %}
+          {% else %}
+            {% set new_price = '$' +book[13] %}
+          {% endif %}
+          {% if book[14] == 0 %}
+            {% set used_price = 'N/A' %}
+            {% else %}
+              {% set used_price = '$' +book[14] %}
+          {% endif %}
+          {% if book[15] == '0' %}
+            {% set rent_price = 'N/A' %}
+          {% else %}
+            {% set rent_price = '$' +book[15] %}
+          {% endif %}
+          {% if book[16] == 0 %}
+            {% set e_price = 'N/A' %}
+          {% else %}
+            {% set e_price = '$' +book[16] %}
+          {% endif %}
+          <p style="center-text: true">Prices</p>
+          <p style="center-text: true">New: {{ new_price }} &nbsp; Used: {{ used_price }} &nbsp; Rental: {{ rent_price }} &nbsp; E-Book: {{ e_price }}</p><br><br>
+          {% if book[9] == 0 %}
+            {% set new_stock = 'N/A' %}
+          {% else %}
+            {% set new_stock = book[9] %}
+          {% endif %}
+          {% if book[10] == 0 %}
+            {% set used_stock = 'N/A' %}
+            {% else %}
+              {% set used_stock = book[10] %}
+          {% endif %}
+          {% if book[11] == '0' %}
+            {% set rent_stock = 'N/A' %}
+          {% else %}
+            {% set rent_stock = book[11] %}
+          {% endif %}
+          {% if book[12] == 0 %}
+            {% set e_stock = 'N/A' %}
+          {% else %}
+            {% set e_stock = book[12] %}
+          {% endif %}
+          <p style="text-center: true">Stock</p>
+          <p style="text-center: true">New: {{ new_stock }} &nbsp; Used: {{ used_stock }} &nbsp; Rental: {{ rent_stock }} &nbsp; E-Book: {{ e_stock }}</p>
+        </div>
+        <div class="row">
+          {% if book[8] == 'Required' %}
+            <p style="center: true">Required by: {{ book[4] }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-md-3">
+        {% set types_available = [] %}
+        {% if new_stock > 0 %}
+          {{ types_available.append({'New': 'New'}) }}
+        {% endif %}
+
+        {{ types_available[0] }}
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}

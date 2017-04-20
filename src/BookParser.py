@@ -14,7 +14,7 @@ class BookParser:
     CLASS = 4
     EDITION = 5
     PROFESSOR = 6
-    CLASS_CODE = 7
+    CRN = 7
     REQUIRED = 8
     STOCK_NEW = 9
     STOCK_USED = 10
@@ -84,6 +84,38 @@ class BookParser:
             if classs is not None:
                 if classs.encode('utf-8').strip() in book_class:
                     results.append(book)
+        if len(results) < 1:
+            return -1
+        return results
+
+    #Returns list of professors for prof. dropdown
+    def get_list_of_prof(self):
+        results = []
+        books = self.csv_to_dict_list()
+        results.append('Professor')
+        for book in books:
+            prof = book[self.PROFESSOR]
+            results.append(prof)
+        return results
+
+    #Returns list of classes for class dropdown
+    def get_list_of_classes(self):
+        results = []
+        books = self.csv_to_dict_list()
+        results.append('Class')
+        for book in books:
+            classs = book[self.CLASS]
+            results.append(classs)
+        return results
+
+    #Searches for books by AUTHOR
+    def search_by_author(self, author):
+        results = []
+        books = self.csv_to_dict_list()
+        for book in books:
+            book_author = book[self.AUTHOR]
+            if author in book_author:
+                results.append(book)
         if len(results) < 1:
             return -1
         return results

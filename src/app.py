@@ -57,6 +57,13 @@ def home():
                 for book in results_kw:
                     if book not in results:
                         results.append(book)
+        if form.author.data is not None:
+            author = form.author.data
+            results_author = bp.search_by_author(author)
+            if results_author is not -1:
+                for book in results_author:
+                    if book not in results:
+                        results.append(book)
 
         return render_template('main.html', form=form, results=results)
 

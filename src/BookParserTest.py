@@ -65,10 +65,25 @@ def should_ret_sixteen_kw():
     result = 'should_ret_16_description: '
     search = bp.search_by_desc("No description available")
     if len(search) == 16:
-        print search
         print result +'PASS'
     else:
         print result +'FAIL'
+
+def should_ret_profs():
+    result = 'should_ret_profs: '
+    search = bp.get_list_of_prof()
+    if len(search) > 0:
+        print result +'PASS'
+    else:
+        print result +'FAIL'
+
+def should_ret_auth_search():
+    result = 'should_ret_auths: '
+    search = bp.search_by_author('Baase')
+    if len(search) > 0:
+        return result +'PASS'
+    else:
+        return result +'FAIL'
 
 ''' Test dict index values '''
 #Will pass if the value at the given index value matches the value name
@@ -89,9 +104,11 @@ def run_all_tests():
     should_ret_one_isbn()
     should_ret_one_prof()
     should_ret_one_class()
+    should_ret_profs()
+    should_ret_auth_search()
     should_ret_sixteen_kw()
     should_ret_nothing()
     should_ret_value()
 
-if __name__ == "__main__":
-    run_all_tests()
+
+run_all_tests()

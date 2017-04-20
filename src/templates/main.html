@@ -2,41 +2,39 @@
 
 {% block content %}
   {% if results %}
-    {% for book in results %}
-    {% set isbn = book[0] %}
-    {% set name = book[1] %}
-    {% set stock_new = book[9] %}
-    {% set stock_used = book[10] %}
-    {% set stock_rent = book[11] %}
-    {% set stock_ebook = book[12] | int %}
-    {% if stock_ebook > 1 %}
-      {% set stock_ebook = 'Yes' %}
-    {% else %}
-      {% set stock_ebook = 'No' %}
-    {% endif %}
-    {% set price_used = book[14] %}
-    {% set price_new = book[13] %}
-    {% set price_rent = book[15] %}
-    {% set price_ebook = book[16] %}
-    {% set description = book[17] %}
-      <div class="row">
-        <div class="col-md-1" style="margin-left: 10px">
-          <a href="{{ url_for('home') }}">
-            <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}">
-          </a>
-        </div>
-        <div class="col-md-10">
-          <h3>{{ name }}</h3>
-          <div class="row">
-            <div class="col-md-12">
-              <p>ISBN: {{ isbn }}</p>
-            </div>
-            <div class="col-md-7">
-              <p>{{ description | truncate(300) }}</p>
+    {% for book_row in results | batch(2) %}
+    <div class="row" style="margin-top: 25px">
+      {% for book in book_row %}
+      {% set isbn = book[0] %}
+      {% set name = book[1] %}
+      {% set author = book[2] %}
+      {% set stock_new = book[9] %}
+      {% set stock_used = book[10] %}
+      {% set stock_rent = book[11] %}
+      
+      {% set price_used = book[14] %}
+      {% set price_new = book[13] %}
+      {% set price_rent = book[15] %}
+      {% set price_ebook = book[16] %}
+      {% set description = book[17] %}
+          <div class="col-md-1" style="margin-left: 100px; margin-top: 50">
+              <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}">
+          </div>
+          <div class="col-md-4">
+            <a href="{{ url_for('book_details', isbn=isbn) }}">
+              <h3>{{ name }}</h3>
+            </a>
+            <div class="row">
+              <div class="col-md-12">
+                <p>ISBN: {{ isbn}}  |  Author: {{ author }}</p>
+              </div>
+              <div class="col-md-12">
+                <p>{{ description | truncate(150) }}</p>
+              </div>
             </div>
           </div>
+          {% endfor %}
         </div>
-      </div>
     {% endfor %}
   {% else %}
 
