@@ -3,7 +3,7 @@
 {% block content %}
   {% if results %}
     {% for book_row in results | batch(2) %}
-    <div class="row" style="margin-top: 25px">
+    <div class="row">
       {% for book in book_row %}
       {% set isbn = book[0] %}
       {% set name = book[1] %}
@@ -11,28 +11,41 @@
       {% set stock_new = book[9] %}
       {% set stock_used = book[10] %}
       {% set stock_rent = book[11] %}
-      
+
       {% set price_used = book[14] %}
       {% set price_new = book[13] %}
       {% set price_rent = book[15] %}
       {% set price_ebook = book[16] %}
       {% set description = book[17] %}
-          <div class="col-md-1" style="margin-left: 100px; margin-top: 50">
+        <div class="col-md-5" style="margin-left: 100px">
+          <div class="col-md-1" style="margin-top: 10px">
               <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}">
           </div>
-          <div class="col-md-4">
-            <a href="{{ url_for('book_details', isbn=isbn) }}">
-              <h3>{{ name }}</h3>
-            </a>
-            <div class="row">
+          <div class="col-md-9" style="margin-left: 50px">
               <div class="col-md-12">
-                <p>ISBN: {{ isbn}}  |  Author: {{ author }}</p>
+                <a href="{{ url_for('book_details', isbn=isbn) }}">
+                  <h4>{{ name }}</h4>
+                </a>
+                  <p style="font-size:12px"></p>
+                  {% if price_ebook == '0' %}
+                    {% set ebook = 'N/A' %}
+                  {% else %}
+                    {% set ebook = '$' +price_ebook %}
+                  {% endif %}
+                  {% if stock_ebook == '0' %}
+                    {% set e_stock = 'No' %}
+                  {% else %}
+                    {% set e_stock = 'Yes' %}
+                  {% endif %}
+                  <p style="font-size:12px">
+                    ISBN: {{ isbn}}  |  Author: {{ author }}<br>
+                    Price: {{ price_new }} (New)  |  {{ price_used }} (Used)  |  {{ price_rent }} (Rent)  |  {{ ebook }} (E-book)<br>
+                    Stock: {{stock_new }} (New)  |  {{ stock_used }} (Used)  |  {{ stock_rent }} (Rent)  |  {{ e_stock }} (E-book)<br>
+                    {{ description | truncate(150) }}
+                  </p>
               </div>
-              <div class="col-md-12">
-                <p>{{ description | truncate(150) }}</p>
-              </div>
-            </div>
           </div>
+        </div>
           {% endfor %}
         </div>
     {% endfor %}
