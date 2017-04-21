@@ -7,14 +7,6 @@ app = Flask(__name__, static_url_path='/static')
 
 bp = BookParser()
 
-def no_dupes(list1, list2):
-    result = []
-    list1.extend(list2)
-    for book in list1:
-        if book not in result:
-            result.append(book)
-    return result
-
 #Routes
 @app.route('/', methods=['GET', 'POST'])
 def home():
