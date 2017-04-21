@@ -17,16 +17,16 @@
       {% set price_rent = book[15] %}
       {% set price_ebook = book[16] %}
       {% set description = book[17] %}
-        <div class="col-md-5" style="margin-left: 100px">
-          <div class="col-md-1" style="margin-top: 10px">
+        <div class="col-md-5" style="margin-left: 100px; margin-top: 20px">
+          <div class="col-md-1">
               <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}">
           </div>
-          <div class="col-md-9" style="margin-left: 50px">
+          <div class="col-md-10" style="margin-left: 50px">
               <div class="col-md-12">
-                <a href="{{ url_for('book_details', isbn=isbn) }}">
-                  <h4>{{ name }}</h4>
-                </a>
-                  <p style="font-size:12px"></p>
+                  <p style="font-size:12px">
+                  <a href="{{ url_for('book_details', isbn=isbn) }}" style="font-size:18px">
+                    {{ name }}
+                  </a><br>
                   {% if price_ebook == '0' %}
                     {% set ebook = 'N/A' %}
                   {% else %}
@@ -37,11 +37,10 @@
                   {% else %}
                     {% set e_stock = 'Yes' %}
                   {% endif %}
-                  <p style="font-size:12px">
                     ISBN: {{ isbn}}  |  Author: {{ author }}<br>
                     Price: {{ price_new }} (New)  |  {{ price_used }} (Used)  |  {{ price_rent }} (Rent)  |  {{ ebook }} (E-book)<br>
                     Stock: {{stock_new }} (New)  |  {{ stock_used }} (Used)  |  {{ stock_rent }} (Rent)  |  {{ e_stock }} (E-book)<br>
-                    {{ description | truncate(150) }}
+                    <b>{{ description | truncate(150) }}</b>
                   </p>
               </div>
           </div>
