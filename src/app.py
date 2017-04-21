@@ -12,6 +12,11 @@ bp = BookParser()
 #Routes
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    if session['cart'] is not None:
+        cart_count = len(session['cart'])
+    else:
+        session['cart'] = []
+        cart_count = len(session['cart'])
     form = SearchForm(request.form)
     bookform = BookTypeForm(request.form)
     if request.method == 'POST':
@@ -60,11 +65,12 @@ def home():
                     for book in results_author:
                         if book not in results:
                             results.append(book)
-            return render_template('main.html', form=form, results=results, bookform=bookform)
-    return render_template('main.html', form=form, bookform=bookform)
+            return render_template('main.html', form=form, results=results, bookform=bookform, cart_count=cart_count)
+    return render_template('main.html', form=form, bookform=bookform, cart_count=cart_count)
 
 @app.route('/cart/add', methods=['POST'])
 def add_to_cart():
+    cart_count = len(session['cart'])
     search_form = SearchForm(request.form)
     form = BookTypeForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -75,48 +81,53 @@ def add_to_cart():
         if form.types.data == 'New' and book_to_add[bp.STOCK_NEW] < 1:
             #Can't add to cart
             flash("Can't add that type!")
-            return render_template('main.html', form=search_form, results=results, bookform=form)
+            return render_template('main.html', form=search_form, results=results, bookform=form, cart_count=cart_count)
         if session['cart'] is None:
             session['cart'] = []
         cart = session['cart']
         cart.append(book_to_add)
         session['cart'] = cart
-        return render_template('main.html', form=search_form, results=results, bookform=form)
+        return render_template('main.html', form=search_form, results=results, bookform=form, cart_count=cart_count)
 
 #Route for shopping cart
 @app.route('/cart', methods=['GET'])
 def show_cart():
+    cart_count = len(session['cart'])
     cart = session['cart']
     form = SearchForm(request.form)
-    return render_template('shoppingcart.html', cart=cart, form=form)
+    return render_template('shoppingcart.html', cart=cart, form=form, cart_count=cart_count)
 
 #Route for book details page
 @app.route('/book/<isbn>', methods=['GET'])
 def book_details(isbn):
+    cart_count = len(session['cart'])
     form = SearchForm(request.form)
     book = bp.search_by_isbn(isbn)
-    return render_template('book.html', book=book[0], form=form)
+    return render_template('book.html', book=book[0], form=form, cart_count=cart_count)
 
 #Route for about page
 @app.route('/about', methods=['GET'])
 def about():
     #Just return static template
+    cart_count = len(session['cart'])
     form = SearchForm(request.form)
-    return render_template('about.html', form=form)
+    return render_template('about.html', form=form, cart_count=cart_count)
 
 #Route for FAQ page
 @app.route('/about/faq', methods=['GET'])
 def faq():
     #Just return static template
+    cart_count = len(session['cart'])
     form = SearchForm(request.form)
-    return render_template('faq.html', form=form)
+    return render_template('faq.html', form=form, cart_count=cart_count)
 
 #Route for FAQ page
 @app.route('/about/contact', methods=['GET'])
 def contact():
     #Just return static template
+    cart_count = len(session['cart'])
     form = SearchForm(request.form)
-    return render_template('contact.html', form=form)
+    return render_template('contact.html', form=form, cart_count=cart_count)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
