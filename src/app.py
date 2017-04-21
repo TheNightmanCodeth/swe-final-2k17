@@ -5,6 +5,8 @@ from BookParser import BookParser
 
 app = Flask(__name__, static_url_path='/static')
 
+bp = BookParser()
+
 def no_dupes(list1, list2):
     result = []
     list1.extend(list2)
@@ -20,8 +22,6 @@ def home():
     if request.method == 'POST' and form.validate():
         #this method is called when the '/' endpoint receives a POST request
         results = []
-        bp = BookParser()
-
         if form.isbn.data is not None:
             isbn = form.isbn.data
             results_isbn = bp.search_by_isbn(isbn)
@@ -72,10 +72,30 @@ def home():
 #Route for book details page
 @app.route('/book/<isbn>', methods=['GET'])
 def book_details(isbn):
-    bp = BookParser()
     form = SearchForm(request.form)
     book = bp.search_by_isbn(isbn)
     return render_template('book.html', book=book[0], form=form)
+
+#Route for about page
+@app.route('/about', methods=['GET'])
+def about():
+    #Just return static template
+    form = SearchForm(request.form)
+    return render_template('about.html', form=form)
+
+#Route for FAQ page
+@app.route('/about/faq', methods=['GET'])
+def faq():
+    #Just return static template
+    form = SearchForm(request.form)
+    return render_template('faq.html', form=form)
+
+#Route for FAQ page
+@app.route('/about/contact', methods=['GET'])
+def contact():
+    #Just return static template
+    form = SearchForm(request.form)
+    return render_template('contact.html', form=form)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
