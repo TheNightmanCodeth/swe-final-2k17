@@ -136,3 +136,16 @@ class BookParser:
         if len(results) < 1:
             return -1
         return results
+
+    #Returns list of available types for given book dict
+    def types_for_book(self, book):
+        types_available = []
+        if book[self.STOCK_NEW] is not 0:
+            types_available.append('New')
+        if book[self.STOCK_USED] is not 0:
+            types_available.append('Used')
+        if book[self.STOCK_RENT] is not 0:
+            types_available.append('Rent')
+        if book[self.STOCK_EBOOK] is not 0:
+            types_available.append('Ebook')
+        return types_available

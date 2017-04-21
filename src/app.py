@@ -1,9 +1,11 @@
 ''' This file is where we define all routes and site-related logic'''
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, session, flash
 from SearchForm import SearchForm
+from BookTypeForm import BookTypeForm
 from BookParser import BookParser
 
 app = Flask(__name__, static_url_path='/static')
+app.secret_key = 'You_(*&)+_lost_*()+_the_//+_game'
 
 bp = BookParser()
 
@@ -11,55 +13,82 @@ bp = BookParser()
 @app.route('/', methods=['GET', 'POST'])
 def home():
     form = SearchForm(request.form)
+    bookform = BookTypeForm(request.form)
+    if request.method == 'POST':
+        if form.validate():
+            #this method is called when the '/' endpoint receives a POST request
+            results = []
+            if form.isbn.data is not None:
+                isbn = form.isbn.data
+                results_isbn = bp.search_by_isbn(isbn)
+                if results_isbn is not -1:
+                    for book in results_isbn:
+                        if book not in results:
+                            results.append(book)
+            if form.prof.data is not None:
+                prof = form.prof.data
+                results_prof = bp.search_by_prof(prof)
+                if results_prof is not -1:
+                    for book in results_prof:
+                        if book not in results:
+                            results.append(book)
+            if form.title.data is not None:
+                title = form.title.data
+                results_title = bp.search_by_title(title)
+                if results_title is not -1:
+                    for book in results_title:
+                        if book not in results:
+                            results.append(book)
+            if form.classs.data is not None:
+                classs = form.classs.data
+                results_class = bp.search_by_class(classs)
+                if results_class is not -1:
+                    for book in results_class:
+                        if book not in results:
+                            results.append(book)
+            if form.keyword.data is not None:
+                keyword = form.keyword.data
+                results_kw = bp.search_by_desc(keyword)
+                if results_kw is not -1:
+                    for book in results_kw:
+                        if book not in results:
+                            results.append(book)
+            if form.author.data is not None:
+                author = form.author.data
+                results_author = bp.search_by_author(author)
+                if results_author is not -1:
+                    for book in results_author:
+                        if book not in results:
+                            results.append(book)
+            return render_template('main.html', form=form, results=results, bookform=bookform)
+    return render_template('main.html', form=form, bookform=bookform)
+
+@app.route('/cart/add', methods=['POST'])
+def add_to_cart():
+    search_form = SearchForm(request.form)
+    form = BookTypeForm(request.form)
     if request.method == 'POST' and form.validate():
-        #this method is called when the '/' endpoint receives a POST request
-        results = []
-        if form.isbn.data is not None:
-            isbn = form.isbn.data
-            results_isbn = bp.search_by_isbn(isbn)
-            if results_isbn is not -1:
-                for book in results_isbn:
-                    if book not in results:
-                        results.append(book)
-        if form.prof.data is not None:
-            prof = form.prof.data
-            results_prof = bp.search_by_prof(prof)
-            if results_prof is not -1:
-                for book in results_prof:
-                    if book not in results:
-                        results.append(book)
-        if form.title.data is not None:
-            title = form.title.data
-            results_title = bp.search_by_title(title)
-            if results_title is not -1:
-                for book in results_title:
-                    if book not in results:
-                        results.append(book)
-        if form.classs.data is not None:
-            classs = form.classs.data
-            results_class = bp.search_by_class(classs)
-            if results_class is not -1:
-                for book in results_class:
-                    if book not in results:
-                        results.append(book)
-        if form.keyword.data is not None:
-            keyword = form.keyword.data
-            results_kw = bp.search_by_desc(keyword)
-            if results_kw is not -1:
-                for book in results_kw:
-                    if book not in results:
-                        results.append(book)
-        if form.author.data is not None:
-            author = form.author.data
-            results_author = bp.search_by_author(author)
-            if results_author is not -1:
-                for book in results_author:
-                    if book not in results:
-                        results.append(book)
+        #Grab search results passed from hidded form data
+        results = form.search.data
+        #Add ISBN and type to cart
+        book_to_add = bp.search_by_isbn(form.isbn.data)[0]
+        if form.types.data == 'New' and book_to_add[bp.STOCK_NEW] < 1:
+            #Can't add to cart
+            flash("Can't add that type!")
+            return render_template('main.html', form=search_form, results=results, bookform=form)
+        if session['cart'] is None:
+            session['cart'] = []
+        cart = session['cart']
+        cart.append(book_to_add)
+        session['cart'] = cart
+        return render_template('main.html', form=search_form, results=results, bookform=form)
 
-        return render_template('main.html', form=form, results=results)
-
-    return render_template('main.html', form=form)
+#Route for shopping cart
+@app.route('/cart', methods=['GET'])
+def show_cart():
+    cart = session['cart']
+    form = SearchForm(request.form)
+    return render_template('shoppingcart.html', cart=cart, form=form)
 
 #Route for book details page
 @app.route('/book/<isbn>', methods=['GET'])

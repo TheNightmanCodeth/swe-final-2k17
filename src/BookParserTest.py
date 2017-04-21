@@ -69,6 +69,15 @@ def should_ret_sixteen_kw():
     else:
         print result +'FAIL'
 
+def should_ret_available_types():
+    result = 'should_ret_available_types: '
+    book = bp.search_by_isbn('978-0300161632')[0]
+    types = bp.types_for_book(book)
+    if len(types) > 1:
+        print result +'PASS'
+    else:
+        print result +'FAIL'
+
 def should_ret_profs():
     result = 'should_ret_profs: '
     search = bp.get_list_of_prof()
@@ -105,6 +114,7 @@ def run_all_tests():
     should_ret_one_prof()
     should_ret_one_class()
     should_ret_profs()
+    should_ret_available_types()
     should_ret_auth_search()
     should_ret_sixteen_kw()
     should_ret_nothing()

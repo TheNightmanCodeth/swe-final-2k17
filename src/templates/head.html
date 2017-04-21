@@ -11,6 +11,10 @@
     </a>
     <p>Online Bookstore</p>
   </div>
+  <!--         _
+           .__(.)<  (MEOW)
+            \___)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
   <div class="col-md-6 col-md-offset-1">
     <form action="/" method="post">
       {{ form.csrf_token }}
@@ -22,6 +26,11 @@
       {{ form.author(size=30, placeholder="Author") }}
       <input type="submit" value="Search">
     </form><br><br>
+  </div>
+  <div class="col-md-2">
+    <a href="/cart">
+      Cart
+    </a>
   </div>
 </div>
 
