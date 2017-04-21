@@ -93,9 +93,11 @@ class BookParser:
         results = []
         books = self.csv_to_dict_list()
         results.append('Professor')
+        abc = []
         for book in books:
             prof = book[self.PROFESSOR]
-            results.append(prof)
+            abc.append(prof)
+        results.extend(sorted(abc))
         return results
 
     #Returns list of classes for class dropdown
@@ -103,9 +105,11 @@ class BookParser:
         results = []
         books = self.csv_to_dict_list()
         results.append('Class')
+        abc = []
         for book in books:
             classs = book[self.CLASS]
-            results.append(classs)
+            abc.append(classs)
+        results.extend(sorted(abc))
         return results
 
     #Searches for books by AUTHOR
