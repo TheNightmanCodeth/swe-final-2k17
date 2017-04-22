@@ -5,7 +5,7 @@ from BookTypeForm import BookTypeForm
 from BookParser import BookParser
 from ShoppingCartForm import ShoppingCartForm
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__)
 app.secret_key = '(-)<(Yo*u(*&)+-los&t*+th(e//+_ga$me)'
 
 bp = BookParser()
@@ -130,30 +130,33 @@ def rem_from_cart():
         for entry in cart:
             isbn = entry['book'][0]
             if form.isbn.data == isbn:
-                print form.qty.data
-                entry['count'] = form.qty.data
+                if form.qty.data == '0':
+                    cart = delete_item(isbn)
+                else:
+                    entry['count'] = form.qty.data
 
         session['cart'] = cart
         return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=len(session['cart']))
-    elif not form.validate():
-        error = "That's not an integer):"
-        print error
     else:
         if request.form['isbn'] is not None:
             search_form = SearchForm(request.form)
             cartform = ShoppingCartForm(request.form)
             form = request.form
             if form['isbn'] is not None:
-                index = 0
-                cart = session['cart']
-                for entry in cart:
-                    isbn = entry['book'][0]
-                    if form['isbn'] == isbn:
-                        del cart[index]
-                    index += 1
+                cart = delete_item(form['isbn'])
                 session['cart'] = cart
                 cart_count = len(session['cart'])
             return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=cart_count)
+
+def delete_item(form_isbn):
+    index = 0
+    cart = session['cart']
+    for entry in cart:
+        isbn = entry['book'][0]
+        if form_isbn == isbn:
+            del cart[index]
+        index += 1
+    return cart
 
 #Route for shopping cart
 @app.route('/cart', methods=['GET'])
