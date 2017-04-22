@@ -3,9 +3,10 @@ from flask import Flask, render_template, url_for, request, redirect, session, f
 from SearchForm import SearchForm
 from BookTypeForm import BookTypeForm
 from BookParser import BookParser
+from ShoppingCartForm import ShoppingCartForm
 
 app = Flask(__name__, static_url_path='/static')
-app.secret_key = 'You_(*&)+_lost_*()+_the_//+_game'
+app.secret_key = '(-)<(Yo*u(*&)+-los&t*+th(e//+_ga$me)'
 
 bp = BookParser()
 
@@ -68,6 +69,7 @@ def home():
             return render_template('main.html', form=form, results=results, bookform=bookform, cart_count=cart_count)
     return render_template('main.html', form=form, bookform=bookform, cart_count=cart_count)
 
+#Endpoint for adding item to cart
 @app.route('/cart/add', methods=['POST'])
 def add_to_cart():
     cart_count = len(session['cart'])
@@ -81,21 +83,45 @@ def add_to_cart():
         if form.types.data == 'New' and book_to_add[bp.STOCK_NEW] < 1:
             #Can't add to cart
             flash("Can't add that type!")
-            return render_template('main.html', form=search_form, results=results, bookform=form, cart_count=cart_count)
+            return ('', 204)
         if session['cart'] is None:
             session['cart'] = []
         cart = session['cart']
-        cart.append(book_to_add)
+        cart.append({'book': book_to_add, 'type': form.types.data, 'count': 1})
         session['cart'] = cart
-        return render_template('main.html', form=search_form, results=results, bookform=form, cart_count=cart_count)
+        cart_count = len(session['cart'])
+        return ('', 204)
+        #render_template('main.html', form=search_form, results=results, bookform=form, cart_count=cart_count)
+
+#Endpoint for removing item from cart
+@app.route('/cart/del', methods=['POST'])
+def rem_from_cart():
+    search_form = SearchForm(request.form)
+    cartform = ShoppingCartForm(request.form)
+    form = request.form
+    if form['isbn'] is not None:
+        index = 0
+        cart = session['cart']
+        for entry in cart:
+            isbn = entry['book'][0]
+            if form['isbn'] == isbn:
+                del cart[index]
+            index += 1
+        session['cart'] = cart
+        cart_count = len(session['cart'])
+    return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=cart_count)
+
+
+
 
 #Route for shopping cart
 @app.route('/cart', methods=['GET'])
 def show_cart():
     cart_count = len(session['cart'])
     cart = session['cart']
+    cartform = ShoppingCartForm(request.form)
     form = SearchForm(request.form)
-    return render_template('shoppingcart.html', cart=cart, form=form, cart_count=cart_count)
+    return render_template('shoppingcart.html', cart=cart, form=form, cartform=cartform, cart_count=cart_count)
 
 #Route for book details page
 @app.route('/book/<isbn>', methods=['GET'])

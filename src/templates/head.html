@@ -28,9 +28,21 @@
     </form><br><br>
   </div>
   <div class="col-md-2">
-    <a href="/cart">
-      Cart ({{ cart_count }})
-    </a>
+    <div class="row">
+      <p>
+        <a href="/faq">FAQ</a>  |  <a href="/contact">Contact</a>  |  <a href="/about">About</a>
+      </p>
+    </div>
+    <div class="row">
+      <!-- this looks dumb
+        <div class="col-md-1">
+          <img src="/static/img/cart.png" width=12 height=12/>
+        </div>
+      -->
+      <div class="col-md-6" style="margin-left: 80px">
+        <a href="/cart">Cart ({{ cart_count }})</a>
+      </div>
+    </div>
   </div>
 </div>
 

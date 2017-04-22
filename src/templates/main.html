@@ -2,18 +2,21 @@
 
 {% block content %}
   {% if results %}
-  {% set search = [] %}
     {% for book_row in results | batch(2) %}
     <div class="row">
       {% for book in book_row %}
-      {{ search.append(book) }}
+
       {% set isbn = book[0] %}
       {% set name = book[1] %}
       {% set author = book[2] %}
+
       {% set stock_new = book[9] %}
+
       {% set stock_used = book[10] %}
+
       {% set stock_rent = book[11] %}
 
+      {% set stock_ebook = book[12] %}
       {% set price_used = book[14] %}
       {% set price_new = book[13] %}
       {% set price_rent = book[15] %}
@@ -42,12 +45,12 @@
                     ISBN: {{ isbn}}  |  Author: {{ author }}<br>
                     Price: {{ price_new }} (New)  |  {{ price_used }} (Used)  |  {{ price_rent }} (Rent)  |  {{ ebook }} (E-book)<br>
                     Stock: {{stock_new }} (New)  |  {{ stock_used }} (Used)  |  {{ stock_rent }} (Rent)  |  {{ e_stock }} (E-book)<br>
-                    <b>{{ description | truncate(150) }}</b>
+                    <b>{{ description | truncate(250) }}</b>
                     <form action="/cart/add" method="post">
-                      {{ bookform.types() }}
-                      <span style="visibility:hidden">{{ bookform.search(choices=search) }}</span>
-                      <span style="visibility:hidden">{{ bookform.isbn(value=isbn) }}</span>
-                      <input type="submit" value="Cart">
+                      {{ bookform.types(choices=types) }}
+                      <input type="submit" value="Add to cart">
+                      <span style="display:none">{{ bookform.search(choices=search) }}</span>
+                      <span style="display:none">{{ bookform.isbn(value=isbn) }}</span>
                     </form>
                   </p>
               </div>
@@ -57,6 +60,10 @@
         </div>
     {% endfor %}
   {% else %}
-
+  <div class="row">
+    <div class="col-md-2 col-md-offset-5">
+      <h3 style="text-align: center">Search for books using keywords!</h3>
+    </div>
+  </div>
   {% endif %}
 {% endblock %}
