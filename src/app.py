@@ -161,9 +161,14 @@ def delete_item(form_isbn):
 def show_cart():
     cart_count = len(session['cart'])
     cart = session['cart']
+    subtotal = 0
+    for entry in cart:
+        price = float(entry['price'])
+        subtotal += price
+    tax = subtotal * .07
     cartform = ShoppingCartForm(request.form)
     form = SearchForm(request.form)
-    return render_template('shoppingcart.html', cart=cart, form=form, cartform=cartform, cart_count=cart_count)
+    return render_template('shoppingcart.html', cart=cart, form=form, cartform=cartform, cart_count=cart_count, subtotal=subtotal, tax=round(tax, 2))
 
 #Route for book details page
 @app.route('/book/<isbn>', methods=['GET'])

@@ -1,60 +1,81 @@
 {% extends "head.html" %}
-
 {% block content %}
   {% if cart %}
+  {% set shipping = 14.99 | float %}
     {% for book_entry in cart %}
-    {% set book = book_entry['book'] %}
-    {% set qty = book_entry['count'] | int %}
-    {% set type = book_entry['type'] %}
-    {% set price_lone = book_entry['price'] | float %}
-    {% set price = price_lone * qty %}
-    <div class="row">
-      {% set isbn = book[0] %}
-      {% set name = book[1] %}
-      {% set author = book[2] %}
-      {% set description = book[17] %}
-      <!-- Cart entry -->
-      <div class="col-md-12" style="margin-left: 100px; margin-top: 20px">
-        <!-- Entry cover image -->
-        <div class="col-md-1">
-            <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}">
-        </div>
-        <!-- Entry title/type/author/isbn/remove -->
-        <div class="col-md-4">
-            <div class="col-md-12">
-                <p style="font-size:12px">
-                  <!-- title -->
-                  <a href="{{ url_for('book_details', isbn=isbn) }}" style="font-size:18px">
-                    {{ name }}
-                  </a><br>
-                  ISBN: {{ isbn }}  |  Author: {{ author }}<br>
-                  Type: {{ type }}<br>
-                  <b>{{ description | truncate(350) }}</b>
-                  <form action="/cart/edit" method="post">
-                    <input type="submit" value="Remove">
-                    <span style="display:none"><input type="text" name="isbn" value="{{ isbn }}"></span>
-                  </form>
-                </p>
-            </div>
-        </div>
-        <!-- Col for qty and price -->
-        <div class="col-md-7" style="margin-top: 50px">
-          <div class="col-md-10">
-            <div class="col-md-4 col-md-offset-1">
-              <form action="/cart/edit" method="post">
-                Qty: {{ cartform.qty(value=qty, size=3) }}
-                <span style="display:none">{{ cartform.isbn(value=isbn) }}</span>
-                <input type="submit" value="Update">
-              </form>
-            </div>
-            <div class="col-md-3 col-md-offset-1" style="margin-top: 10px">
-              Price: ${{ price }}
+      {% set book = book_entry['book'] %}
+      {% set qty = book_entry['count'] | int %}
+      {% set type = book_entry['type'] %}
+      {% set price_lone = book_entry['price'] | float %}
+      {% set price = price_lone * qty %}
+      <div class="row">
+        {% set isbn = book[0] %}
+        {% set name = book[1] %}
+        {% set author = book[2] %}
+        {% set description = book[17] %}
+        <!-- Cart entry -->
+        <div class="col-md-12" style="margin-left: 100px; margin-top: 20px">
+          <!-- Entry cover image -->
+          <div class="col-md-1">
+              <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}">
+          </div>
+          <!-- Entry title/type/author/isbn/remove -->
+          <div class="col-md-4">
+              <div class="col-md-12">
+                  <p style="font-size:12px">
+                    <!-- title -->
+                    <a href="{{ url_for('book_details', isbn=isbn) }}" style="font-size:18px">
+                      {{ name }}
+                    </a><br>
+                    ISBN: {{ isbn }}  |  Author: {{ author }}  |  Type: {{ type }}<br>
+                    <form action="/cart/edit" method="post">
+                      <input type="submit" value="Remove">
+                      <span style="display:none"><input type="text" name="isbn" value="{{ isbn }}"></span>
+                    </form>
+                  </p>
+              </div>
+          </div>
+          <!-- Col for qty and price -->
+          <div class="col-md-7" style="margin-top: 50px">
+            <div class="col-md-10">
+              <div class="col-md-4 col-md-offset-1">
+                <form action="/cart/edit" method="post">
+                  Qty: {{ cartform.qty(value=qty, size=3) }}
+                  <span style="display:none">{{ cartform.isbn(value=isbn) }}</span>
+                  <input type="submit" value="Update">
+                </form>
+              </div>
+              <div class="col-md-3 col-md-offset-1" style="margin-top: 10px">
+                Price: ${{ price }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     {% endfor %}
+    <!-- subtotal/shipping/tax/grand total -->
+    <div class="row" style="margin-top: 100px">
+      <div class="col-md-4 col-md-offset-8">
+        Subtotal: ................................................ ${{ subtotal }}<br><br>
+        Shipping: ................................................ ${{ shipping }}<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tax: ................................................ ${{ tax }}<br><br>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-md-offset-8">
+        Grand Total: ......................................... ${{ subtotal + shipping + tax }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2" style="margin-left: 1510px; margin-top: 15px">
+        <a href="/checkout"><button type="button">Checkout</button></a>
+      </div>
+    </div>
   {% else %}
     <div class="row">
       <div class="col-md-2 col-md-offset-5">

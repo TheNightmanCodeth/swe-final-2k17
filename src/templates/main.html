@@ -5,17 +5,12 @@
     {% for book_row in results | batch(2) %}
     <div class="row">
       {% for book in book_row %}
-
       {% set isbn = book[0] %}
       {% set name = book[1] %}
       {% set author = book[2] %}
-
       {% set stock_new = book[9] %}
-
       {% set stock_used = book[10] %}
-
       {% set stock_rent = book[11] %}
-
       {% set stock_ebook = book[12] %}
       {% set price_used = book[14] %}
       {% set price_new = book[13] %}
