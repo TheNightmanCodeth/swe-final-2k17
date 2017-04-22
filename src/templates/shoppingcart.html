@@ -4,19 +4,14 @@
   {% if cart %}
     {% for book_entry in cart %}
     {% set book = book_entry['book'] %}
-    {% set qty = book_entry['count'] %}
+    {% set qty = book_entry['count'] | int %}
+    {% set type = book_entry['type'] %}
+    {% set price_lone = book_entry['price'] | float %}
+    {% set price = price_lone * qty %}
     <div class="row">
       {% set isbn = book[0] %}
       {% set name = book[1] %}
       {% set author = book[2] %}
-      {% set stock_new = book[9] %}
-      {% set stock_used = book[10] %}
-      {% set stock_rent = book[11] %}
-
-      {% set price_used = book[14] %}
-      {% set price_new = book[13] %}
-      {% set price_rent = book[15] %}
-      {% set price_ebook = book[16] %}
       {% set description = book[17] %}
       <!-- Cart entry -->
       <div class="col-md-12" style="margin-left: 100px; margin-top: 20px">
@@ -25,40 +20,38 @@
             <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}">
         </div>
         <!-- Entry title/type/author/isbn/remove -->
-        <div class="col-md-5">
+        <div class="col-md-4">
             <div class="col-md-12">
                 <p style="font-size:12px">
                   <!-- title -->
                   <a href="{{ url_for('book_details', isbn=isbn) }}" style="font-size:18px">
                     {{ name }}
                   </a><br>
-                  {% if price_ebook == '0' %}
-                    {% set ebook = 'N/A' %}
-                  {% else %}
-                    {% set ebook = '$' +price_ebook %}
-                  {% endif %}
-                  {% if stock_ebook == '0' %}
-                    {% set e_stock = 'No' %}
-                  {% else %}
-                    {% set e_stock = 'Yes' %}
-                  {% endif %}
-                  ISBN: {{ isbn}}  |  Author: {{ author }}<br>
-                  Price: {{ price_new }} (New)  |  {{ price_used }} (Used)  |  {{ price_rent }} (Rent)  |  {{ ebook }} (E-book)<br>
-                  Stock: {{stock_new }} (New)  |  {{ stock_used }} (Used)  |  {{ stock_rent }} (Rent)  |  {{ e_stock }} (E-book)<br>
-                  <b>{{ description | truncate(150) }}</b>
-                  <form action="/cart/add" method="post">
-                    {{ cartform.qty(placeholder=qty) }}
-                    <input type="submit" value="Update">
-                  </form>
-                  <form action="/cart/del" method="post">
-                    <input type="submit" value="X">
+                  ISBN: {{ isbn }}  |  Author: {{ author }}<br>
+                  Type: {{ type }}<br>
+                  <b>{{ description | truncate(350) }}</b>
+                  <form action="/cart/edit" method="post">
+                    <input type="submit" value="Remove">
                     <span style="display:none"><input type="text" name="isbn" value="{{ isbn }}"></span>
                   </form>
                 </p>
             </div>
         </div>
         <!-- Col for qty and price -->
-
+        <div class="col-md-7" style="margin-top: 50px">
+          <div class="col-md-10">
+            <div class="col-md-4 col-md-offset-1">
+              <form action="/cart/edit" method="post">
+                Qty: {{ cartform.qty(value=qty, size=3) }}
+                <span style="display:none">{{ cartform.isbn(value=isbn) }}</span>
+                <input type="submit" value="Update">
+              </form>
+            </div>
+            <div class="col-md-3 col-md-offset-1" style="margin-top: 10px">
+              Price: ${{ price }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     {% endfor %}

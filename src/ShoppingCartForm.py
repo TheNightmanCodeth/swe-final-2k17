@@ -1,5 +1,6 @@
-from wtforms import Form, StringField, SelectField, validators, SelectMultipleField
+from wtforms import Form, StringField, validators
 from BookParser import BookParser
 
 class ShoppingCartForm(Form):
-    qty = StringField(u'ISBN', validators=[validators.Required()], filters=[lambda x: x or None])
+    qty = StringField(u'qty', validators=[validators.Required()], filters=[lambda x: x or None])
+    isbn = StringField(u'ISBN', validators=[validators.Required()], filters=[lambda x: x or None])

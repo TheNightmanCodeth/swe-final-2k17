@@ -80,39 +80,80 @@ def add_to_cart():
         results = form.search.data
         #Add ISBN and type to cart
         book_to_add = bp.search_by_isbn(form.isbn.data)[0]
-        if form.types.data == 'New' and book_to_add[bp.STOCK_NEW] < 1:
-            #Can't add to cart
-            flash("Can't add that type!")
-            return ('', 204)
+        if form.types.data == 'New':
+            if book_to_add[bp.STOCK_NEW] < 1:
+                #Can't add to cart
+                flash("Can't add that type!")
+                return ('', 204)
+            else:
+                price = book_to_add[bp.PRICE_NEW]
+        if form.types.data == 'Rent':
+            if book_to_add[bp.STOCK_RENT] < 1:
+                #Can't add to cart
+                flash("Can't add that type!")
+                return ('', 204)
+            else:
+                price = book_to_add[bp.PRICE_RENT]
+        if form.types.data == 'Used':
+            if book_to_add[bp.STOCK_USED] < 1:
+                #Can't add to cart
+                flash("Can't add that type!")
+                return ('', 204)
+            else:
+                price = book_to_add[bp.PRICE_USED]
+        if form.types.data == 'E-book':
+            if book_to_add[bp.STOCK_EBOOK] < 1:
+                #Can't add to cart
+                flash("Can't add that type!")
+                return ('', 204)
+            else:
+                price = book_to_add[bp.PRICE_EBOOK]
+
         if session['cart'] is None:
             session['cart'] = []
         cart = session['cart']
-        cart.append({'book': book_to_add, 'type': form.types.data, 'count': 1})
+        cart.append({'book': book_to_add, 'type': form.types.data, 'count': 2, 'price': price})
         session['cart'] = cart
         cart_count = len(session['cart'])
         return ('', 204)
         #render_template('main.html', form=search_form, results=results, bookform=form, cart_count=cart_count)
 
-#Endpoint for removing item from cart
-@app.route('/cart/del', methods=['POST'])
+#Endpoint for editing cart items
+@app.route('/cart/edit', methods=['POST'])
 def rem_from_cart():
+    form = ShoppingCartForm(request.form)
     search_form = SearchForm(request.form)
     cartform = ShoppingCartForm(request.form)
-    form = request.form
-    if form['isbn'] is not None:
-        index = 0
+    if form.validate():
+        new_qty = int(form.qty.data)
         cart = session['cart']
         for entry in cart:
             isbn = entry['book'][0]
-            if form['isbn'] == isbn:
-                del cart[index]
-            index += 1
+            if form.isbn.data == isbn:
+                print form.qty.data
+                entry['count'] = form.qty.data
+
         session['cart'] = cart
-        cart_count = len(session['cart'])
-    return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=cart_count)
-
-
-
+        return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=len(session['cart']))
+    elif not form.validate():
+        error = "That's not an integer):"
+        print error
+    else:
+        if request.form['isbn'] is not None:
+            search_form = SearchForm(request.form)
+            cartform = ShoppingCartForm(request.form)
+            form = request.form
+            if form['isbn'] is not None:
+                index = 0
+                cart = session['cart']
+                for entry in cart:
+                    isbn = entry['book'][0]
+                    if form['isbn'] == isbn:
+                        del cart[index]
+                    index += 1
+                session['cart'] = cart
+                cart_count = len(session['cart'])
+            return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=cart_count)
 
 #Route for shopping cart
 @app.route('/cart', methods=['GET'])
