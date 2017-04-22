@@ -1,9 +1,7 @@
 ''' This file is where we define all routes and site-related logic'''
 from flask import Flask, render_template, url_for, request, redirect, session, flash
-from SearchForm import SearchForm
-from BookTypeForm import BookTypeForm
+from Forms import SearchForm, BookTypeForm, ShoppingCartForm
 from BookParser import BookParser
-from ShoppingCartForm import ShoppingCartForm
 
 app = Flask(__name__)
 app.secret_key = '(-)<(Yo*u(*&)+-los&t*+th(e//+_ga$me)'
