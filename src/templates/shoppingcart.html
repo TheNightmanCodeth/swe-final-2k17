@@ -28,6 +28,7 @@
                       {{ name }}
                     </a><br>
                     ISBN: {{ isbn }}  |  Author: {{ author }}  |  Type: {{ type }}<br>
+                    Unit Price: ${{ price_lone }}
                     <form action="/cart/edit" method="post">
                       <input type="submit" value="Remove">
                       <span style="display:none"><input type="text" name="isbn" value="{{ isbn }}"></span>
