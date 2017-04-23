@@ -95,7 +95,11 @@
             {{ bookform.types(choices=new_stock) }}
             <input type="submit" value="Add to cart">
             <span style="display:none">{{ bookform.isbn(value=book[0]) }}</span>
+            <span style="display:none"><input type="text" name="sender" value="book"></span>
           </form>
+          {% if error %}
+            <h3>{{ error }}</h3>
+          {% endif %}
         </div>
       </div>
     </div>
