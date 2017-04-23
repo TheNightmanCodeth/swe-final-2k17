@@ -2,26 +2,28 @@
 
 {% block content %}
 
-<!-- HTML goes in here -->
-<h1>Contact Us</h1>
-<label>Phone:</label>
-    <p> 470-578-6261</p>
+<div class="row">
+  <div class="col-md-8 col-md-offset-3">
+
+    <h1 style="margin-left: 250px">Contact Us</h1><br><br>
+    <label>Phone:</label>
+    <p> 470-578-6261</p><br>
 
     <label>Hours of Operation:</label>
     <p>
-        Monday - Thursday 7:30AM-7:00PM
-        Friday            7:30AM-5:00PM  
-        Saturday          10:00AM-5:00PM
-        Sunday            CLOSED
-    </p>
-
-    <label>Email:</label>
-    <a href="mailto:books@kennesaw.edu ">books@kennesaw.edu</a>
-
+        Monday - Thursday:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7:30AM-7:00PM<br>
+        Friday:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7:30AM-5:00PM<br>
+        Saturday:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10:00AM-5:00PM<br>
+        Sunday:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CLOSED
+        <!-- There may very well be a better way to do this. I do not know of any better ways though, so this way it shall stay -->
+    </p><br>
+    <label>Email:</label><br>
+    <a href="mailto:books@kennesaw.edu ">books@kennesaw.edu</a><br><br>
     <label>Mailing Address:</label>
     <p>
-        395 Cobb Ave
+        395 Cobb Ave<br>
         Kennesaw, GA 30144
     </p>
-
+  </div>
+</div>
 {% endblock %}

@@ -256,7 +256,7 @@ def about():
     return render_template('about.html', form=form, cart_count=cart_count)
 
 #Route for FAQ page
-@app.route('/about/faq', methods=['GET'])
+@app.route('/faq', methods=['GET'])
 def faq():
     #Just return static template
     cart_count = len(session['cart'])
@@ -264,7 +264,7 @@ def faq():
     return render_template('faq.html', form=form, cart_count=cart_count)
 
 #Route for FAQ page
-@app.route('/about/contact', methods=['GET'])
+@app.route('/contact', methods=['GET'])
 def contact():
     #Just return static template
     cart_count = len(session['cart'])
