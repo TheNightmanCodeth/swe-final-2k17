@@ -268,5 +268,12 @@
           </div>
         </div>
       </form>
+      {% if errors %}
+        <div class="col-md-4 col-md-offset-4">
+          {% for error in errors %}
+              {{ error }}
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
 {% endblock %}

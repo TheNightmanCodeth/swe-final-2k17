@@ -1,0 +1,10 @@
+Payment type: Financial Aid
+---Shipping---
+Name: Kevin Chins
+Address: 420 BlazeIt st
+State: GA
+City: Marietta
+Zip: 30060
+---Books---
+978-0133813463: Intro to Java Programming, Comp Version
+Plus MyProgrammmingLab with Pearson eText- Access Card Package 

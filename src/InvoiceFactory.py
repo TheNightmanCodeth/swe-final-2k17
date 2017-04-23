@@ -70,3 +70,20 @@ class InvoiceFactory:
             dictionary['bill_zip'] = checkout_form.billing_zip.data
 
         return dictionary
+
+    def get_users(self):
+        students = []
+        f = file("files/students.txt").read()
+        index = 0
+        users = []
+        user = []
+        for word in f.split():
+            if index < 4:
+                user.append(word)
+                index += 1
+            else:
+                user.append(word)
+                index = 0
+                users.append(user)
+                user = []
+        return users
