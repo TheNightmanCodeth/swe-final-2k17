@@ -31,7 +31,7 @@ class ShoppingCart:
             entry_isbn = entry['book'][0]
             if isbn == entry_isbn:
                 if qty == '0':
-                    cart = sc.delete_item(isbn)
+                    cart = self.delete_item(isbn)
                 else:
                     entry['count'] = qty
         return cart
