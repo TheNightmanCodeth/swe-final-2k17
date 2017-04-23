@@ -59,25 +59,30 @@
           {% endif %}
           <p style="center-text: true">Prices</p>
           <p style="center-text: true">New: {{ new_price }} &nbsp; Used: {{ used_price }} &nbsp; Rental: {{ rent_price }} &nbsp; E-Book: {{ e_price }}</p><br><br>
-          {% if book[9] == 0 %}
+          {% set types = [] %}
+          {% if book[9] == '0' %}
             {% set new_stock = 'N/A' %}
           {% else %}
+            {{ types.append('New') }}
             {% set new_stock = book[9] %}
           {% endif %}
-          {% if book[10] == 0 %}
+          {% if book[10] == '0' %}
             {% set used_stock = 'N/A' %}
-            {% else %}
-              {% set used_stock = book[10] %}
+          {% else %}
+            {{ types.append('Used') }}
+            {% set used_stock = book[10] %}
           {% endif %}
           {% if book[11] == '0' %}
             {% set rent_stock = 'N/A' %}
           {% else %}
+            {{ types.append('Rent') }}
             {% set rent_stock = book[11] %}
           {% endif %}
-          {% if book[12] == 0 %}
+          {% if book[12] == '0' %}
             {% set e_stock = 'N/A' %}
           {% else %}
-            {% set e_stock = book[12] %}
+            {{ types.append('E-book') }}
+            {% set e_stock = 'YES' %}
           {% endif %}
           <p style="text-center: true">Stock</p>
           <p style="text-center: true">New: {{ new_stock }} &nbsp; Used: {{ used_stock }} &nbsp; Rental: {{ rent_stock }} &nbsp; E-Book: {{ e_stock }}</p>
@@ -87,7 +92,7 @@
             <p style="center: true">Required by: {{ book[4] }}
           {% endif %}
           <form action="/cart/add" method="post">
-            {{ bookform.types() }}
+            {{ bookform.types(choices=new_stock) }}
             <input type="submit" value="Add to cart">
             <span style="display:none">{{ bookform.isbn(value=book[0]) }}</span>
           </form>

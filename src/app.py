@@ -83,28 +83,28 @@ def add_to_cart():
         #Add ISBN and type to cart
         book_to_add = bp.search_by_isbn(form.isbn.data)[0]
         if form.types.data == 'New':
-            if book_to_add[bp.STOCK_NEW] < 1:
+            if int(book_to_add[bp.STOCK_NEW]) < 1:
                 #Can't add to cart
                 flash("Can't add that type!")
                 return ('', 204)
             else:
                 price = book_to_add[bp.PRICE_NEW]
         if form.types.data == 'Rent':
-            if book_to_add[bp.STOCK_RENT] < 1:
+            if int(book_to_add[bp.STOCK_RENT]) < 1:
                 #Can't add to cart
                 flash("Can't add that type!")
                 return ('', 204)
             else:
                 price = book_to_add[bp.PRICE_RENT]
         if form.types.data == 'Used':
-            if book_to_add[bp.STOCK_USED] < 1:
+            if int(book_to_add[bp.STOCK_USED]) < 1:
                 #Can't add to cart
                 flash("Can't add that type!")
                 return ('', 204)
             else:
                 price = book_to_add[bp.PRICE_USED]
         if form.types.data == 'E-book':
-            if book_to_add[bp.STOCK_EBOOK] < 1:
+            if int(book_to_add[bp.STOCK_EBOOK]) < 1:
                 #Can't add to cart
                 flash("Can't add that type!")
                 return ('', 204)
