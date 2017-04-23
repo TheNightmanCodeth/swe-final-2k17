@@ -3,12 +3,14 @@ from flask import Flask, render_template, url_for, request, redirect, session, f
 from Forms import SearchForm, BookTypeForm, ShoppingCartForm, CheckoutForm
 from BookParser import BookParser
 from ShoppingCart import ShoppingCart
+from InvoiceFactory import InvoiceFactory
 
 app = Flask(__name__)
 app.secret_key = '(-)<(Yo*u(*&)+-los&t*+th(e//+_ga$me)'
 
 bp = BookParser()
 sc = ShoppingCart()
+inv_factory = InvoiceFactory()
 
 #Routes
 @app.route('/', methods=['GET', 'POST'])
@@ -159,9 +161,19 @@ def show_cart():
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
     if request.method == 'POST':
-        #Form hell
+        checkout_form = CheckoutForm(request.form)
+        #Form hell!!
+        if checkout_form.validate():
+            '''Get invoice dictionary'''
+            invoice_dict = inv_factory.checkout_to_invoice(checkout_form)
+            '''Write to invoice file'''
+            inv_factory.write_to_file(invoice_dict)
+        else:
+            for field, errors in checkout_form.errors.items():
+                for error in errors:
+                    print u"Error in the %s field - %s" % (getattr(checkout_form, field).label.text, error)
+        return redirect(url_for('home'))
 
-        pass
     else:
         search_form = SearchForm(request.form)
         subtotal = sc.get_cart_subtotal()

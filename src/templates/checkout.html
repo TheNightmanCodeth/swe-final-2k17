@@ -97,8 +97,6 @@
     <div class="row" style="margin-top: 25px">
       <!-- WTForms ~ Literally amirite!?!?!?!? -->
       <form action="/checkout" method="post">
-        <!-- Another hidden field, this time for storing payment type -->
-        <span style="display:none">{{ billing_form.payment_type(value=payment) }}</span>
         <!-- Payment information -->
         <div class="row">
           <div class="col-md-7 col-md-offset-3">
@@ -107,20 +105,25 @@
                 <h3>Payment Information</h3>
               </div>
               <div class="col-md-1" style="margin-top: 20px; margin-left: 12px">
-                <a href="/checkout?payment=cc"><button type="button">Credit</button></a>
+                <a href="/checkout?payment=cc"><button id="cc" type="button">Credit</button></a>
               </div>
               <div class="col-md-1" style="margin-top: 20px; margin-left: 25px">
-                <a href="/checkout?payment=pp"><button type="button">PayPal</button></a>
+                <a href="/checkout?payment=pp"><button id="pp" type="button">PayPal</button></a>
               </div>
               <div class="col-md-3" style="margin-top: 20px; margin-left: 30px">
-                <a href="/checkout?payment=fa"><button type="button">Financial Aid</button></a>
+                <a href="/checkout?payment=fa"><button id="fa" type="button">Financial Aid</button></a>
               </div>
             </div>
           </div>
           {% if payment == 'cc' %}
+          <script type="text/javascript">
+            jQuery(document).ready(function() {
+              $('#cc').prop("disabled",true);
+            });
+          </script>
             <div class="col-md-4 col-md-offset-4">
               <div class="col-md-12">
-                {{ billing_form.card(size=75, placeholder="Card Number...") }}<br><br>
+                {{ billing_form.card(size=75, placeholder="Card Number (No dashes or spaces!)") }}<br><br>
               </div>
               <div class="col-md-2">
                 {{ billing_form.exp_m(size=5, placeholder="MM") }}
@@ -133,6 +136,11 @@
               </div>
             </div>
           {% elif payment == 'pp' %}
+          <script type="text/javascript">
+            jQuery(document).ready(function() {
+              $('#pp').prop("disabled",true);
+            });
+          </script>
             <div class="col-md-4 col-md-offset-4">
               <div class="col-md-4">
                 <div class="col-md-12">
@@ -144,6 +152,11 @@
               </div>
             </div>
           {% elif payment == 'fa' %}
+          <script type="text/javascript">
+            jQuery(document).ready(function() {
+              $('#fa').prop("disabled",true);
+            });
+          </script>
               <div class="col-md-4 col-md-offset-4">
                 <div class="col-md-4">
                   <div class="col-md-12">
@@ -155,10 +168,29 @@
                 </div>
               </div>
           {% else %}
-            <div class="col-md-4 col-md-offset-4">
-              <h3>NO</h3>
-            </div>
+            {% set payment = "cc" %}
+            <script type="text/javascript">
+              jQuery(document).ready(function() {
+                $('#cc').prop("disabled",true);
+              });
+            </script>
+              <div class="col-md-4 col-md-offset-4">
+                <div class="col-md-12">
+                  {{ billing_form.card(size=75, placeholder="Card Number (No dashes or spaces!)") }}<br><br>
+                </div>
+                <div class="col-md-2">
+                  {{ billing_form.exp_m(size=5, placeholder="MM") }}
+                </div>
+                <div class="col-md-2">
+                  {{ billing_form.exp_y(size=5, placeholder="YY") }}
+                </div>
+                <div class="col-md-4">
+                  {{ billing_form.cvv(size=6, placeholder="CVV") }}
+                </div>
+              </div>
           {% endif %}
+          <!-- Another hidden field, this time for storing payment type -->
+          <span style="display:none">{{ billing_form.payment_type(value=payment) }}</span>
         </div>
         <!-- Shipping address -->
         <div class="row">
@@ -170,6 +202,9 @@
           </div>
           <div class="col-md-4 col-md-offset-4">
             {{ billing_form.shipping_addr(size=75, placeholder="Address...") }}<br><br>
+          </div>
+          <div class="col-md-4 col-md-offset-4">
+            {{ billing_form.shipping_city(size=75, placeholder="City...") }}<br><br>
           </div>
           <div class="col-md-6 col-md-offset-4">
             {{ billing_form.shipping_state(size=35, placeholder="State...") }}
@@ -194,6 +229,9 @@
             <div class="col-md-4 col-md-offset-4">
               {{ billing_form.billing_addr(size=75, placeholder="Address...") }}<br><br>
             </div>
+            <div class="col-md-4 col-md-offset-4">
+              {{ billing_form.billing_city(size=75, placeholder="City...") }}<br><br>
+            </div>
             <div class="col-md-6 col-md-offset-4">
               {{ billing_form.billing_state(size=35, placeholder="State...") }}
               &nbsp;
@@ -207,11 +245,13 @@
                   //Set all fields in billing form to disabled
                   $('#billing_name').attr('readonly', true);
                   $('#billing_addr').attr('readonly', true);
+                  $('#billing_city').attr('readonly', true);
                   $('#billing_state').attr('readonly', true);
                   $('#billing_zip').attr('readonly', true);
                 } else {
                   //Set all fields in billing form to enabled
                   $('#billing_name').attr('readonly', false);
+                  $('#billing_addr').attr('readonly', false);
                   $('#billing_addr').attr('readonly', false);
                   $('#billing_state').attr('readonly', false);
                   $('#billing_zip').attr('readonly', false);
