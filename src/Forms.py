@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, SelectField, validators, SelectMultipleField, PasswordField
+from wtforms import Form, StringField, SelectField, validators, SelectMultipleField, PasswordField, BooleanField
 from BookParser import BookParser
 
 class BookTypeForm(Form):
@@ -25,6 +25,7 @@ class ShoppingCartForm(Form):
 
 class CheckoutForm(Form):
     #Billing
+    same_as_shipping = BooleanField('Same as shipping:')
     billing_name = StringField(u'Name', validators=[validators.Required()], filters=[lambda x: x or None])
     billing_addr = StringField(u'Address', validators=[validators.Required()], filters=[lambda x: x or None])
     billing_city = StringField(u'City', validators=[validators.Required()], filters=[lambda x: x or None])
@@ -45,9 +46,9 @@ class CheckoutForm(Form):
     fa_login = StringField(u'Username', validators=[validators.Required()], filters=[lambda x: x or None])
     fa_password = PasswordField(u'Password', validators=[validators.Required()], filters=[lambda x: x or None])
     ''' Shipping '''
-    #Shipping address may be the same as billing
-    shipping_name = StringField(u'Name', validators=[validators.Required()], filters=[lambda x: x or None])
-    shipping_addr = StringField(u'Address', validators=[validators.Required()], filters=[lambda x: x or None])
-    shipping_city = StringField(u'City', validators=[validators.Required()], filters=[lambda x: x or None])
-    shipping_state = StringField(u'State', validators=[validators.Required()], filters=[lambda x: x or None])
-    shipping_zip = StringField(u'ZIP', validators=[validators.Required()], filters=[lambda x: x or None])
+    #Shipping address
+    shipping_name = StringField(u'Name', validators=[validators.Required()], filters=[lambda x: x or None], id="shipping_name")
+    shipping_addr = StringField(u'Address', validators=[validators.Required()], filters=[lambda x: x or None], id="shipping_addr")
+    shipping_city = StringField(u'City', validators=[validators.Required()], filters=[lambda x: x or None], id="shipping_city")
+    shipping_state = StringField(u'State', validators=[validators.Required()], filters=[lambda x: x or None], id="shipping_state")
+    shipping_zip = StringField(u'ZIP', validators=[validators.Required()], filters=[lambda x: x or None], id="shipping_zip")
