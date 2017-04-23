@@ -85,28 +85,42 @@ def add_to_cart():
         if form.types.data == 'New':
             if int(book_to_add[bp.STOCK_NEW]) < 1:
                 #Can't add to cart
-                flash("Can't add that type!")
+                if request.form['sender'] is not None:
+                    if request.form['sender'] == 'book':
+                        book = bp.search_by_isbn(form.isbn.data)
+                        return render_template('book.html', book=book[0], bookform=form, form=search_form, cart_count=cart_count, error="Out of stock!")
                 return ('', 204)
             else:
                 price = book_to_add[bp.PRICE_NEW]
         if form.types.data == 'Rent':
             if int(book_to_add[bp.STOCK_RENT]) < 1:
                 #Can't add to cart
-                flash("Can't add that type!")
+                if request.form['sender'] is not None:
+                    if request.form['sender'] == 'book':
+                        book = bp.search_by_isbn(form.isbn.data)
+                        return render_template('book.html', book=book[0], bookform=form, form=search_form, cart_count=cart_count, error="Out of stock!")
                 return ('', 204)
             else:
                 price = book_to_add[bp.PRICE_RENT]
         if form.types.data == 'Used':
             if int(book_to_add[bp.STOCK_USED]) < 1:
                 #Can't add to cart
-                flash("Can't add that type!")
+                if request.form['sender'] is not None:
+                    if request.form['sender'] == 'book':
+                        book = bp.search_by_isbn(form.isbn.data)
+                        return render_template('book.html', book=book[0], bookform=form, form=search_form, cart_count=cart_count, error="Out of stock!")
                 return ('', 204)
             else:
                 price = book_to_add[bp.PRICE_USED]
         if form.types.data == 'E-book':
             if int(book_to_add[bp.STOCK_EBOOK]) < 1:
                 #Can't add to cart
-                flash("Can't add that type!")
+                if request.form['sender'] is not None:
+                    if request.form['sender'] == 'book':
+                        book = bp.search_by_isbn(form.isbn.data)
+                        return render_template('book.html', book=book[0], bookform=form, form=search_form, cart_count=cart_count, error="Out of stock!")
+                if request.form['search'] is not None:
+                    print request.form['search']
                 return ('', 204)
             else:
                 price = book_to_add[bp.PRICE_EBOOK]
@@ -117,6 +131,12 @@ def add_to_cart():
         cart.append({'book': book_to_add, 'type': form.types.data, 'count': 1, 'price': price})
         session['cart'] = cart
         cart_count = len(session['cart'])
+
+        return ('', 204)
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                print u"Error in the %s field - %s" % (getattr(form, field).label.text, error)
         return ('', 204)
         #render_template('main.html', form=search_form, results=results, bookform=form, cart_count=cart_count)
 

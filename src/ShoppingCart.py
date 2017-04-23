@@ -11,9 +11,8 @@ class ShoppingCart:
             price = entry['price']
             qty = entry['count']
             subtotal += float(price) * int(qty)
-            return subtotal
-        return -1
-
+        return subtotal
+        
     def delete_item(self, form_isbn):
         index = 0
         cart = session['cart']
