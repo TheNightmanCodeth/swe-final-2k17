@@ -97,6 +97,8 @@
     <div class="row" style="margin-top: 25px">
       <!-- WTForms ~ Literally amirite!?!?!?!? -->
       <form action="/checkout" method="post">
+        <!-- Another hidden field, this time for storing payment type -->
+        <span style="display:none">{{ billing_form.payment_type(value=payment) }}</span>
         <!-- Payment information -->
         <div class="row">
           <div class="col-md-6 col-md-offset-4">
@@ -117,16 +119,41 @@
           </div>
           {% if payment == 'cc' %}
             <div class="col-md-4 col-md-offset-4">
-              <h3>CC</h3>
+              <div class="col-md-12">
+                {{ billing_form.card(size=75, placeholder="Card Number...") }}<br><br>
+              </div>
+              <div class="col-md-2">
+                {{ billing_form.exp_m(size=5, placeholder="MM") }}
+              </div>
+              <div class="col-md-2">
+                {{ billing_form.exp_y(size=5, placeholder="YY") }}
+              </div>
+              <div class="col-md-4">
+                {{ billing_form.cvv(size=6, placeholder="CVV") }}
+              </div>
             </div>
           {% elif payment == 'pp' %}
             <div class="col-md-4 col-md-offset-4">
-              <h3>PP</h3>
+              <div class="col-md-4">
+                <div class="col-md-12">
+                  {{ billing_form.pp_email(size=75, placeholder="Email...") }}<br><br>
+                </div>
+                <div class="col-md-2">
+                  {{ billing_form.pp_password(size=75, placeholder="Password...") }}
+                </div>
+              </div>
             </div>
           {% elif payment == 'fa' %}
-            <div class="col-md-4 col-md-offset-4">
-              <h3>FA</h3>
-            </div>
+              <div class="col-md-4 col-md-offset-4">
+                <div class="col-md-4">
+                  <div class="col-md-12">
+                    {{ billing_form.fa_login(size=75, placeholder="Login...") }}<br><br>
+                  </div>
+                  <div class="col-md-2">
+                    {{ billing_form.fa_password(size=75, placeholder="Password...") }}
+                  </div>
+                </div>
+              </div>
           {% else %}
             <div class="col-md-4 col-md-offset-4">
               <h3>NO</h3>
