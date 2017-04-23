@@ -176,7 +176,7 @@ def checkout():
         search_form = SearchForm(request.form)
         subtotal = sc.get_cart_subtotal()
         tax = subtotal * .07
-        
+
         return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
 
     else:
@@ -194,8 +194,9 @@ def checkout():
 def book_details(isbn):
     cart_count = len(session['cart'])
     form = SearchForm(request.form)
+    book_form = BookTypeForm(request.form)
     book = bp.search_by_isbn(isbn)
-    return render_template('book.html', book=book[0], form=form, cart_count=cart_count)
+    return render_template('book.html', book=book[0], bookform=book_form, form=form, cart_count=cart_count)
 
 #Route for about page
 @app.route('/about', methods=['GET'])

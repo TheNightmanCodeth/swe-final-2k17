@@ -86,15 +86,12 @@
           {% if book[8] == 'Required' %}
             <p style="center: true">Required by: {{ book[4] }}
           {% endif %}
+          <form action="/cart/add" method="post">
+            {{ bookform.types() }}
+            <input type="submit" value="Add to cart">
+            <span style="display:none">{{ bookform.isbn(value=book[0]) }}</span>
+          </form>
         </div>
-      </div>
-      <div class="col-md-3">
-        {% set types_available = [] %}
-        {% if new_stock > 0 %}
-          {{ types_available.append({'New': 'New'}) }}
-        {% endif %}
-
-        {{ types_available[0] }}
       </div>
     </div>
   {% endif %}
