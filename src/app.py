@@ -172,7 +172,12 @@ def checkout():
             for field, errors in checkout_form.errors.items():
                 for error in errors:
                     print u"Error in the %s field - %s" % (getattr(checkout_form, field).label.text, error)
-        return redirect(url_for('home'))
+
+        search_form = SearchForm(request.form)
+        subtotal = sc.get_cart_subtotal()
+        tax = subtotal * .07
+        
+        return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
 
     else:
         search_form = SearchForm(request.form)

@@ -28,7 +28,7 @@
                       {{ name }}
                     </a><br>
                     ISBN: {{ isbn }}  |  Author: {{ author }}  |  Type: {{ type }}<br>
-                    Unit Price: ${{ price_lone }}
+                    Unit Price: ${{ '%0.2f' % price_lone | float }}
                     <form action="/cart/edit" method="post">
                       <input type="submit" value="Remove">
                       <span style="display:none"><input type="text" name="isbn" value="{{ isbn }}"></span>
@@ -57,8 +57,8 @@
     <!-- subtotal/shipping/tax/grand total -->
     <div class="row" style="margin-top: 100px">
       <div class="col-md-4 col-md-offset-8">
-        Subtotal: ................................................ ${{ subtotal }}<br><br>
-        Shipping: ................................................ ${{ shipping }}<br><br>
+        Subtotal: ................................................ ${{ '%0.2f' % subtotal | float }}<br><br>
+        Shipping: ................................................ ${{ '%0.2f' % shipping | float }}<br><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tax: ................................................ ${{ tax }}<br><br>
       </div>
     </div>
@@ -69,7 +69,8 @@
     </div>
     <div class="row">
       <div class="col-md-4 col-md-offset-8">
-        Grand Total: ......................................... ${{ subtotal + shipping + tax }}
+        {% set gt = subtotal + shipping + tax %}
+        Grand Total: ......................................... ${{ '%0.2f' % gt | float }}
       </div>
     </div>
     <div class="row">

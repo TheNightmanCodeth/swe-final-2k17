@@ -21,6 +21,7 @@
               <hr>
             </div>
         </div>
+        {% if cart %}
           {% for entry in cart %}
             {% set book = entry['book'] %}
             {% set qty  = entry['count'] | int %}
@@ -33,13 +34,15 @@
                 <h4>{{ qty }}</h4>
               </div>
               <div class="col-md-2">
-                <h4>${{ qty * price }}</h4>
+                {% set book_prc = qty * price %}
+                <h4>${{ '%0.2f' % book_prc | float }}</h4>
               </div>
               <div class="col-md-8">
                 <hr>
               </div>
             </div>
           {% endfor %}
+        {% endif %}
           <!-- Subtotal shipping and tax -->
           <div class="row">
             <div class="col-md-5" style="margin-left: 10px">
@@ -49,7 +52,7 @@
               <h4>{{ cart_count }}</h4>
             </div>
             <div class="col-md-2">
-              <h4>${{ subtotal }}</h4>
+              <h4>${{ '%0.2f' % subtotal|float }}</h4>
             </div>
             <div class="col-md-8">
               <hr>
@@ -71,7 +74,7 @@
               <h4>Tax</h4>
             </div>
             <div class="col-md-1 col-md-offset-2">
-              <h4>${{ tax }}</h4>
+              <h4>${{ '%0.2f' % tax | float }}</h4>
             </div>
             <div class="col-md-8">
               <hr>
@@ -82,7 +85,8 @@
               <h4>Total:</h4>
             </div>
             <div class="col-md-1 col-md-offset-1">
-              <h4>${{ subtotal + 14.99 + tax }}</h4>
+              {% set total = subtotal + 14.99 + tax %}
+              <h4>${{ '%0.2f' % total | float }}</h4>
             </div>
             <div class="col-md-8">
               <hr>
@@ -243,18 +247,18 @@
               $("#same_as_shipping").change(function() {
                 if(this.checked) {
                   //Set all fields in billing form to disabled
-                  $('#billing_name').attr('readonly', true);
-                  $('#billing_addr').attr('readonly', true);
-                  $('#billing_city').attr('readonly', true);
-                  $('#billing_state').attr('readonly', true);
-                  $('#billing_zip').attr('readonly', true);
+                  $('#billing_name').prop("disabled",true);
+                  $('#billing_addr').prop("disabled",true);
+                  $('#billing_city').prop("disabled",true);
+                  $('#billing_state').prop("disabled",true);
+                  $('#billing_zip').prop("disabled",true);
                 } else {
                   //Set all fields in billing form to enabled
-                  $('#billing_name').attr('readonly', false);
-                  $('#billing_addr').attr('readonly', false);
-                  $('#billing_addr').attr('readonly', false);
-                  $('#billing_state').attr('readonly', false);
-                  $('#billing_zip').attr('readonly', false);
+                  $('#billing_name').prop("disabled",false);
+                  $('#billing_addr').prop("disabled",false);
+                  $('#billing_city').prop("disabled",false);
+                  $('#billing_state').prop("disabled",false);
+                  $('#billing_zip').prop("disabled",false);
                 }
               });
             });

@@ -7,7 +7,8 @@ class InvoiceFactory:
     #Takes a dict with invoice data and writes it to a file
     def write_to_file(self, invoice):
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-        file_to_write = open('shared/{}'.format(timestamp), 'w+')
+        file_to_write = open('shared/{}.txt'.format(timestamp), 'w+')
+
         if invoice['type'] == 'pp':
             file_to_write.write('Payment type: PayPal\n')
         elif invoice['type'] == 'cc':
@@ -24,7 +25,6 @@ class InvoiceFactory:
         for entry in session['cart']:
             book = entry['book']
             file_to_write.write(book[0] +': ' +book[1] +'\n')
-        return True
 
     #Takes checkout info and returns a dict object
     def checkout_to_invoice(self, checkout_form):
