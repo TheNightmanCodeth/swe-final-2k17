@@ -1,6 +1,6 @@
 ''' This file is where we define all routes and site-related logic'''
 from flask import Flask, render_template, url_for, request, redirect, session, flash
-from Forms import SearchForm, BookTypeForm, ShoppingCartForm, CheckoutBillingForm, CheckoutShippingForm, CheckoutPaypalForm, CheckoutCardForm, CheckoutFAForm
+from Forms import SearchForm, BookTypeForm, ShoppingCartForm, CheckoutForm
 from BookParser import BookParser
 from ShoppingCart import ShoppingCart
 
@@ -156,22 +156,21 @@ def show_cart():
     return render_template('shoppingcart.html', cart=session['cart'], form=form, cartform=cartform, cart_count=cart_count, subtotal=subtotal, tax=round(tax, 2))
 
 #Route for checkout page
-@app.route('/checkout', methods=['GET'])
+@app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
-    form = ShoppingCartForm(request.form)
-    search_form = SearchForm(request.form)
-    cartform = ShoppingCartForm(request.form)
-    subtotal = sc.get_cart_subtotal()
-    tax = subtotal * .07
+    if request.method == 'POST':
+        #Form hell
 
-    #Form hell
-    shipping_addr = CheckoutShippingForm(request.form)
-    billing_addr = CheckoutBillingForm(request.form)
-    billing_paypal = CheckoutPaypalForm(request.form)
-    billing_card = CheckoutCardForm(request.form)
-    billing_fa = CheckoutFAForm(request.form)
+        pass
+    else:
+        search_form = SearchForm(request.form)
+        subtotal = sc.get_cart_subtotal()
+        tax = subtotal * .07
 
-    return render_template('checkout.html', cart=session['cart'], form=search_form, ship_form=shipping_addr, bill_addr=billing_addr, paypal=billing_paypal, card=billing_card, fa=billing_fa, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
+        payment_type = request.args.get('payment')
+        billing_form = CheckoutForm(request.form)
+
+        return render_template('checkout.html', payment=payment_type, cart=session['cart'], form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
 
 #Route for book details page
 @app.route('/book/<isbn>', methods=['GET'])
