@@ -30,17 +30,21 @@ class CheckoutForm(Form):
     billing_city = StringField(u'City', validators=[validators.Required()], filters=[lambda x: x or None])
     billing_state = StringField(u'State', validators=[validators.Required()], filters=[lambda x: x or None])
     billing_zip = StringField(u'ZIP', validators=[validators.Required()], filters=[lambda x: x or None])
+    ''' Payment '''
+    #Hidden field for storing payment type information
+    payment_type = StringField(u'Payment', validators=[validators.Required()], filters=[lambda x: x or None]) #Yes i know we don't /technically/ need the filters in a required field, but it's a fallback I guess.
     #PayPal
-    email = StringField(u'Email', validators=[validators.Required(), validators.Email()], filters=[lambda x: x or None])
-    password = StringField(u'Password', validators=[validators.Required()], filters=[lambda x: x or None])
+    pp_email = StringField(u'Email', validators=[validators.Required(), validators.Email()], filters=[lambda x: x or None])
+    pp_password = PasswordField(u'Password', validators=[validators.Required()], filters=[lambda x: x or None])
     #Credit Card
     card = StringField(u'Card Number (No dashes!)', validators=[validators.Required(), validators.Length(min=16)], filters=[lambda x: x or None])
     exp_m = StringField(u'MM', validators=[validators.Required(), validators.Length(min=2, max=2)], filters=[lambda x: x or None])
     exp_y = StringField(u'YY', validators=[validators.Required(), validators.Length(min=2, max=2)], filters=[lambda x: x or None])
     cvv   = StringField(u'CVV', validators=[validators.Required(), validators.Length(min=3, max=3)], filters=[lambda x: x or None])
     #Financial Aid
-    login = StringField(u'Username', validators=[validators.Required()], filters=[lambda x: x or None])
-    password = PasswordField(u'Password', validators=[validators.Required()], filters=[lambda x: x or None])
+    fa_login = StringField(u'Username', validators=[validators.Required()], filters=[lambda x: x or None])
+    fa_password = PasswordField(u'Password', validators=[validators.Required()], filters=[lambda x: x or None])
+    ''' Shipping '''
     #Shipping address may be the same as billing
     shipping_name = StringField(u'Name', validators=[validators.Required()], filters=[lambda x: x or None])
     shipping_addr = StringField(u'Address', validators=[validators.Required()], filters=[lambda x: x or None])
