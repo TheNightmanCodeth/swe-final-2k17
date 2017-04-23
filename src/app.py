@@ -1,6 +1,6 @@
 ''' This file is where we define all routes and site-related logic'''
 from flask import Flask, render_template, url_for, request, redirect, session, flash
-from Forms import SearchForm, BookTypeForm, ShoppingCartForm
+from Forms import SearchForm, BookTypeForm, ShoppingCartForm, CheckoutBillingForm, CheckoutShippingForm, CheckoutPaypalForm, CheckoutCardForm, CheckoutFAForm
 from BookParser import BookParser
 from ShoppingCart import ShoppingCart
 
@@ -136,13 +136,14 @@ def rem_from_cart():
     else:
         if request.form['isbn'] is not None:
             #Request is for item removal
+            form = request.form
             if form['isbn'] is not None:
                 cart = sc.delete_item(form['isbn'])
                 session['cart'] = cart
 
             subtotal = sc.get_cart_subtotal()
             tax = subtotal *.07
-            return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=sc.get_cart_size(), subtotal=round(subtotal, 2), tax=round(tax, 2))
+            return render_template('shoppingcart.html', cart=session['cart'], form=search_form, cartform=cartform, cart_count=sc.get_cart_size(), subtotal=round(subtotal, 2), tax=round(tax, 2))
 
 #Route for shopping cart
 @app.route('/cart', methods=['GET'])
@@ -162,7 +163,15 @@ def checkout():
     cartform = ShoppingCartForm(request.form)
     subtotal = sc.get_cart_subtotal()
     tax = subtotal * .07
-    return render_template('checkout.html', cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
+
+    #Form hell
+    shipping_addr = CheckoutShippingForm(request.form)
+    billing_addr = CheckoutBillingForm(request.form)
+    billing_paypal = CheckoutPaypalForm(request.form)
+    billing_card = CheckoutCardForm(request.form)
+    billing_fa = CheckoutFAForm(request.form)
+
+    return render_template('checkout.html', cart=session['cart'], form=search_form, ship_form=shipping_addr, bill_addr=billing_addr, paypal=billing_paypal, card=billing_card, fa=billing_fa, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
 
 #Route for book details page
 @app.route('/book/<isbn>', methods=['GET'])
