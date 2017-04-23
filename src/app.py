@@ -2,16 +2,18 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash
 from Forms import SearchForm, BookTypeForm, ShoppingCartForm
 from BookParser import BookParser
+from ShoppingCart import ShoppingCart
 
 app = Flask(__name__)
 app.secret_key = '(-)<(Yo*u(*&)+-los&t*+th(e//+_ga$me)'
 
 bp = BookParser()
+sc = ShoppingCart()
 
 #Routes
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    if session['cart'] is not None:
+    if 'cart' in session:
         cart_count = len(session['cart'])
     else:
         session['cart'] = []
@@ -110,7 +112,7 @@ def add_to_cart():
         if session['cart'] is None:
             session['cart'] = []
         cart = session['cart']
-        cart.append({'book': book_to_add, 'type': form.types.data, 'count': 2, 'price': price})
+        cart.append({'book': book_to_add, 'type': form.types.data, 'count': 1, 'price': price})
         session['cart'] = cart
         cart_count = len(session['cart'])
         return ('', 204)
@@ -122,53 +124,45 @@ def rem_from_cart():
     form = ShoppingCartForm(request.form)
     search_form = SearchForm(request.form)
     cartform = ShoppingCartForm(request.form)
-    if form.validate():
-        new_qty = int(form.qty.data)
-        cart = session['cart']
-        for entry in cart:
-            isbn = entry['book'][0]
-            if form.isbn.data == isbn:
-                if form.qty.data == '0':
-                    cart = delete_item(isbn)
-                else:
-                    entry['count'] = form.qty.data
 
+    if form.validate():
+        #Request is for qty edit
+        cart = sc.edit_item_qty(form.isbn.data, form.qty.data)
         session['cart'] = cart
-        return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=len(session['cart']))
+
+        subtotal = sc.get_cart_subtotal()
+        tax = subtotal *.07
+        return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=sc.get_cart_size(), subtotal=round(subtotal, 2), tax=round(tax, 2))
     else:
         if request.form['isbn'] is not None:
-            search_form = SearchForm(request.form)
-            cartform = ShoppingCartForm(request.form)
-            form = request.form
+            #Request is for item removal
             if form['isbn'] is not None:
-                cart = delete_item(form['isbn'])
+                cart = sc.delete_item(form['isbn'])
                 session['cart'] = cart
-                cart_count = len(session['cart'])
-            return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=cart_count)
 
-def delete_item(form_isbn):
-    index = 0
-    cart = session['cart']
-    for entry in cart:
-        isbn = entry['book'][0]
-        if form_isbn == isbn:
-            del cart[index]
-        index += 1
-    return cart
+            subtotal = sc.get_cart_subtotal()
+            tax = subtotal *.07
+            return render_template('shoppingcart.html', cart=cart, form=search_form, cartform=cartform, cart_count=sc.get_cart_size(), subtotal=round(subtotal, 2), tax=round(tax, 2))
 
 #Route for shopping cart
 @app.route('/cart', methods=['GET'])
 def show_cart():
-    cart_count = len(session['cart'])
-    cart = session['cart']
-    subtotal = 0
-    for entry in cart:
-        price = float(entry['price'])
-        subtotal += price
+    cart_count = sc.get_cart_size()
+    subtotal = sc.get_cart_subtotal()
     tax = subtotal * .07
     cartform = ShoppingCartForm(request.form)
     form = SearchForm(request.form)
-    return render_template('shoppingcart.html', cart=cart, form=form, cartform=cartform, cart_count=cart_count, subtotal=subtotal, tax=round(tax, 2))
+    return render_template('shoppingcart.html', cart=session['cart'], form=form, cartform=cartform, cart_count=cart_count, subtotal=subtotal, tax=round(tax, 2))
+
+#Route for checkout page
+@app.route('/checkout', methods=['GET'])
+def checkout():
+    form = ShoppingCartForm(request.form)
+    search_form = SearchForm(request.form)
+    cartform = ShoppingCartForm(request.form)
+    subtotal = sc.get_cart_subtotal()
+    tax = subtotal * .07
+    return render_template('checkout.html', cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
 
 #Route for book details page
 @app.route('/book/<isbn>', methods=['GET'])
