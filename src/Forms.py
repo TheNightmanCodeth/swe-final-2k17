@@ -23,32 +23,24 @@ class ShoppingCartForm(Form):
     qty = StringField(u'qty', validators=[validators.Required()], filters=[lambda x: x or None])
     isbn = StringField(u'ISBN', validators=[validators.Required()], filters=[lambda x: x or None])
 
-class CheckoutBillingForm(Form):
+class CheckoutForm(Form):
     #Billing
     billing_name = StringField(u'Name', validators=[validators.Required()], filters=[lambda x: x or None])
     billing_addr = StringField(u'Address', validators=[validators.Required()], filters=[lambda x: x or None])
     billing_city = StringField(u'City', validators=[validators.Required()], filters=[lambda x: x or None])
     billing_state = StringField(u'State', validators=[validators.Required()], filters=[lambda x: x or None])
     billing_zip = StringField(u'ZIP', validators=[validators.Required()], filters=[lambda x: x or None])
-
-class CheckoutPaypalForm(Form):
     #PayPal
     email = StringField(u'Email', validators=[validators.Required(), validators.Email()], filters=[lambda x: x or None])
     password = StringField(u'Password', validators=[validators.Required()], filters=[lambda x: x or None])
-
-class CheckoutCardForm(Form):
     #Credit Card
     card = StringField(u'Card Number (No dashes!)', validators=[validators.Required(), validators.Length(min=16)], filters=[lambda x: x or None])
     exp_m = StringField(u'MM', validators=[validators.Required(), validators.Length(min=2, max=2)], filters=[lambda x: x or None])
     exp_y = StringField(u'YY', validators=[validators.Required(), validators.Length(min=2, max=2)], filters=[lambda x: x or None])
     cvv   = StringField(u'CVV', validators=[validators.Required(), validators.Length(min=3, max=3)], filters=[lambda x: x or None])
-
-class CheckoutFAForm(Form):
     #Financial Aid
     login = StringField(u'Username', validators=[validators.Required()], filters=[lambda x: x or None])
     password = PasswordField(u'Password', validators=[validators.Required()], filters=[lambda x: x or None])
-
-class CheckoutShippingForm(Form):
     #Shipping address may be the same as billing
     shipping_name = StringField(u'Name', validators=[validators.Required()], filters=[lambda x: x or None])
     shipping_addr = StringField(u'Address', validators=[validators.Required()], filters=[lambda x: x or None])
