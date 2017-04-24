@@ -205,7 +205,11 @@ def checkout():
                                 search_form = SearchForm(request.form)
                                 subtotal = sc.get_cart_subtotal()
                                 tax = subtotal * .07
-
+                                for entry in sc.get_cart():
+                                    book = entry['book']
+                                    type = entry['type']
+                                    count = entry['count']
+                                    bp.update_stock(book[0], type, count)
                                 return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
                             else:
                                 errors= ['Insufficient funds!']
@@ -232,7 +236,11 @@ def checkout():
                     search_form = SearchForm(request.form)
                     subtotal = sc.get_cart_subtotal()
                     tax = subtotal * .07
-
+                    for entry in sc.get_cart():
+                        book = entry['book']
+                        type = entry['type']
+                        count = entry['count']
+                        bp.update_stock(book[0], type, count)
                     return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
                 else:
                     errors= ['Incorrect login!']
@@ -250,6 +258,11 @@ def checkout():
                     search_form = SearchForm(request.form)
                     subtotal = sc.get_cart_subtotal()
                     tax = subtotal * .07
+                    for entry in session['cart']:
+                        book = entry['book']
+                        type = entry['type']
+                        count = entry['count']
+                        bp.update_stock(book[0], type, count)
                     return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
                 else:
                     errors= ['Card declined- check CVV!']

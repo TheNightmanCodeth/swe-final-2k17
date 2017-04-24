@@ -93,6 +93,16 @@ def should_ret_auth_search():
         return result +'PASS'
     else:
         return result +'FAIL'
+#Should write new stock for book by isbn to books db
+def should_write_new_stock():
+    result = 'should_write_new_stock: '
+    #Subtracts 10 from current stock
+    bp.update_stock('978-0073376356', 'New', '10')
+    book = bp.search_by_isbn('978-0073376356')[0]
+    if book[bp.STOCK_RENT] == '5':
+        print result +'PASS'
+    else:
+        print result +'FAIL'
 
 ''' Test dict index values '''
 #Will pass if the value at the given index value matches the value name
@@ -114,11 +124,11 @@ def run_all_tests():
     should_ret_one_prof()
     should_ret_one_class()
     should_ret_profs()
+    should_write_new_stock()
     should_ret_available_types()
     should_ret_auth_search()
     should_ret_sixteen_kw()
     should_ret_nothing()
     should_ret_value()
-
 
 run_all_tests()

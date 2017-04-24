@@ -40,8 +40,6 @@
             {% set book_prc = qty * price %}
             <h4>${{ '%0.2f' % book_prc | float }}</h4>
           </div>
-
-
           <div class="col-md-8">
             {% if type == 'E-book' %}
             Download: <a href="#">https://www.ebooksrus.com/{{ book[0] }}/download.php</a>

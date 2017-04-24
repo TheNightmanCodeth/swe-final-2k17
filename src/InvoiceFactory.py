@@ -1,6 +1,7 @@
 '''Yes I know that's not what a factory is'''
 import datetime
 from flask import session
+from ShoppingCart import ShoppingCart
 
 class InvoiceFactory:
 
@@ -24,7 +25,9 @@ class InvoiceFactory:
         file_to_write.write('---Books---\n')
         for entry in session['cart']:
             book = entry['book']
-            file_to_write.write(book[0] +': ' +book[1] +'\n')
+            file_to_write.write(book[0] +': ' +book[1] +' (' +entry['type'] +')' +'\n')
+        file_to_write.write('---Financial---\n')
+        file_to_write.write('Total: ' +str(invoice['total']) +'\n')
 
     #Takes checkout info and returns a dict object
     def checkout_to_invoice(self, checkout_form):
@@ -68,6 +71,12 @@ class InvoiceFactory:
             dictionary['bill_state'] = checkout_form.billing_state.data
             dictionary['bill_city'] = checkout_form.billing_city.data
             dictionary['bill_zip'] = checkout_form.billing_zip.data
+        ''' Financial '''
+        sc = ShoppingCart()
+        st = sc.get_cart_subtotal()
+        tax = float(st) * .07
+        total = st + tax + 14.99
+        dictionary['total'] = total
 
         return dictionary
 

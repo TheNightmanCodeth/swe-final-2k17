@@ -38,6 +38,28 @@ class BookParser:
                 books.append(book)
             return books
 
+    #Writes new stock value to book by isbn
+    def update_stock(self, isbn, bk_type, to_remove):
+        books_file_dir = os.path.join(os.getcwd(), 'files/books.csv')
+        read = csv.reader(open(books_file_dir))
+        #Save current csv values into array
+        books = [book for book in read]
+        for book in books:
+            if book[0] == isbn:
+                #Overwrite the value we want to update in temp array
+                if bk_type == 'New':
+                    new_stock = int(book[self.STOCK_NEW]) - int(to_remove)
+                    book[self.STOCK_NEW] = new_stock
+                elif bk_type == 'Rent':
+                    new_stock = int(book[self.STOCK_RENT]) - int(to_remove)
+                    book[self.STOCK_RENT] = new_stock
+                elif bk_type == 'Used':
+                    new_stock = int(book[self.STOCK_USED]) - int(to_remove)
+                    book[self.STOCK_USED] = new_stock
+        writer = csv.writer(open(books_file_dir, 'w'))
+        #Overwrite csv data with new list
+        writer.writerows(books)
+
     #Searches through list of books for title match
     def search_by_title(self, title):
         results = []
