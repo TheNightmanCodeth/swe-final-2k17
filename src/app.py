@@ -208,14 +208,25 @@ def checkout():
 
                                 return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
                             else:
-                                print 'insufficient funds'
-                                return ('', 204)
+                                errors= ['Insufficient funds!']
+                                search_form = SearchForm(request.form)
+                                subtotal = sc.get_cart_subtotal()
+                                tax = subtotal * .07
+                                payment_type = request.args.get('payment')
+                                billing_form = CheckoutForm(request.form)
+                                return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
                         else:
-                            print 'incorrect login'
-                            return ('', 204)
+                            errors= ['Incorrect login!']
+                            search_form = SearchForm(request.form)
+                            subtotal = sc.get_cart_subtotal()
+                            tax = subtotal * .07
+                            payment_type = request.args.get('payment')
+                            billing_form = CheckoutForm(request.form)
+                            return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
+
             elif invoice_dict['type'] == 'pp':
                 '''Email is validated by wtforms'''
-                if checkout_form.pp_password == '123456789':
+                if checkout_form.pp_password.data == '123456789':
                     '''Write to invoice file'''
                     inv_factory.write_to_file(invoice_dict)
                     search_form = SearchForm(request.form)
@@ -223,31 +234,45 @@ def checkout():
                     tax = subtotal * .07
 
                     return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
-
+                else:
+                    errors= ['Incorrect login!']
+                    search_form = SearchForm(request.form)
+                    subtotal = sc.get_cart_subtotal()
+                    tax = subtotal * .07
+                    payment_type = request.args.get('payment')
+                    billing_form = CheckoutForm(request.form)
+                    return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
             elif invoice_dict['type'] == 'cc':
                 '''cc data is verified by wtforms validators'''
-                if checkout_form.cc_cvv is not None:
+                if checkout_form.cvv.data is not None:
                     '''Write to invoice file'''
                     inv_factory.write_to_file(invoice_dict)
                     search_form = SearchForm(request.form)
                     subtotal = sc.get_cart_subtotal()
                     tax = subtotal * .07
-
                     return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
-
                 else:
-                    return ('', 204)
+                    errors= ['Card declined- check CVV!']
+                    search_form = SearchForm(request.form)
+                    subtotal = sc.get_cart_subtotal()
+                    tax = subtotal * .07
+                    payment_type = request.args.get('payment')
+                    billing_form = CheckoutForm(request.form)
+                    return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
+
         else:
+            form_errors = []
             for field, errors in checkout_form.errors.items():
                 for error in errors:
-                    print u"Error in the %s field - %s" % (getattr(checkout_form, field).label.text, error)
+                    form_errors.append(u"Error: %s - %s" % (getattr(checkout_form, field).label.text, error))
+
             search_form = SearchForm(request.form)
             subtotal = sc.get_cart_subtotal()
             tax = subtotal * .07
 
             payment_type = request.args.get('payment')
             billing_form = CheckoutForm(request.form)
-            return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
+            return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=form_errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
     else:
         search_form = SearchForm(request.form)
         subtotal = sc.get_cart_subtotal()
