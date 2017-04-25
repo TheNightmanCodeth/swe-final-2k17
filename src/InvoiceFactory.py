@@ -33,10 +33,12 @@ class InvoiceFactory:
             book = entry['book']
             file_to_write.write(book[0] +': ' +book[1] +' (' +entry['type'] +')' +' $' +entry['price'] +' X ' +str(entry['count']) +'\n')
         file_to_write.write('---Financial---\n')
-        file_to_write.write('Subtotal: ' +str(invoice['subtotal']) +'\n')
-        file_to_write.write('Sales tax: ' +str(invoice['tax']) +'\n')
-        file_to_write.write('Total: ' +str(invoice['total']) +'\n')
-
+        sub_round = '%0.2f' % invoice['subtotal']
+        tax_round = '%0.2f' % invoice['tax']
+        total_round = '%0.2f' % invoice['total']
+        file_to_write.write('Subtotal: ' +str(sub_round) +'\n')
+        file_to_write.write('Sales tax: ' +str(tax_round) +'\n')
+        file_to_write.write('Total: ' +str(total_round) +'\n')
     #Takes checkout info and returns a dict object
     def checkout_to_invoice(self, checkout_form):
         '''Payment'''

@@ -3,7 +3,7 @@
 {% block content %}
   {% if results %}
     {% for book_row in results | batch(2) %}
-    <div class="row" style="margin-left: 50px; ">
+    <div class="row" style="">
       {% for book in book_row %}
       {% set isbn = book[0] %}
       {% set name = book[1] %}
@@ -17,7 +17,7 @@
       {% set price_rent = book[15] %}
       {% set price_ebook = book[16] %}
       {% set description = book[17] %}
-        <div class="col-md-5" style="margin-top: 20px">
+        <div class="col-md-6" style="margin-top: 20px">
           <div class="col-md-1">
               <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}">
           </div>

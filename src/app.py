@@ -204,10 +204,7 @@ def checkout():
             if invoice_dict['type'] == 'fa':
                 #Make sure user exists, and has enough money
                 users = inv_factory.get_users()
-                print checkout_form.fa_login.data
                 for user in users:
-                    print user[2]
-                    print user[3]
                     if checkout_form.fa_login.data == user[2]:
                         if checkout_form.fa_password.data == user[3]:
                             st = sc.get_cart_subtotal()

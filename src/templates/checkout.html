@@ -25,10 +25,11 @@
           {% for entry in cart %}
             {% set book = entry['book'] %}
             {% set qty  = entry['count'] | int %}
+            {% set type = entry['type'] %}
             {% set price = entry['price'] | float %}
             <div class="row">
               <div class="col-md-5">
-                <h4>{{ book[1] }}</h4>
+                <h4>{{ book[1] }} ({{ type }})</h4>
               </div>
               <div class="col-md-2" style="margin-left: 10px">
                 <h4>{{ qty }}</h4>
@@ -277,7 +278,7 @@
             {{ billing_form.email(size=75, placeholder="Email...") }}<br><br>
           </div>
         </div>
-        <div class="col-md-1 col-md-offset-9">
+        <div class="col-md-1 col-md-offset-7">
           <input type="submit" value="Checkout" />
         </div>
       </form>
