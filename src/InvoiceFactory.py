@@ -1,15 +1,21 @@
 '''Yes I know that's not what a factory is'''
 import datetime
+from random import randint
 from flask import session
 from ShoppingCart import ShoppingCart
+from BookParser import BookParser
 
 class InvoiceFactory:
+    bp = BookParser()
 
     #Takes a dict with invoice data and writes it to a file
     def write_to_file(self, invoice):
-        timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-        file_to_write = open('shared/{}.txt'.format(timestamp), 'w+')
+        timestamp = '{:%Y-%m-%d}'.format(datetime.datetime.now())
+        time = '{:%H%M%S}'.format(datetime.datetime.now())
 
+        filename = timestamp +' ' +time
+        file_to_write = open('shared/{}.txt'.format(filename), 'w+')
+        file_to_write.write('Date placed: ' +timestamp +'\n')
         if invoice['type'] == 'pp':
             file_to_write.write('Payment type: PayPal\n')
         elif invoice['type'] == 'cc':
@@ -25,8 +31,10 @@ class InvoiceFactory:
         file_to_write.write('---Books---\n')
         for entry in session['cart']:
             book = entry['book']
-            file_to_write.write(book[0] +': ' +book[1] +' (' +entry['type'] +')' +'\n')
+            file_to_write.write(book[0] +': ' +book[1] +' (' +entry['type'] +')' +' $' +entry['price'] +' X ' +str(entry['count']) +'\n')
         file_to_write.write('---Financial---\n')
+        file_to_write.write('Subtotal: ' +str(invoice['subtotal']) +'\n')
+        file_to_write.write('Sales tax: ' +str(invoice['tax']) +'\n')
         file_to_write.write('Total: ' +str(invoice['total']) +'\n')
 
     #Takes checkout info and returns a dict object
@@ -74,9 +82,12 @@ class InvoiceFactory:
         ''' Financial '''
         sc = ShoppingCart()
         st = sc.get_cart_subtotal()
-        tax = float(st) * .07
-        total = st + tax + 14.99
+        s_t = float(st) + 14.99
+        tax = float(s_t) * .07
+        total = s_t + tax
+        dictionary['subtotal'] = st
         dictionary['total'] = total
+        dictionary['tax'] = tax
 
         return dictionary
 
@@ -96,3 +107,21 @@ class InvoiceFactory:
                 users.append(user)
                 user = []
         return users
+
+    def verify_qty(self, book):
+        cart = session['cart']
+        stock = True
+        for entry in cart:
+            cart_book = entry['book']
+            cart_book_type = entry['type']
+            book = bp.search_by_isbn(cart_book[0])[0]
+            if cart_book_type == 'New':
+                if int(book[bp.STOCK_NEW]) <= 0:
+                    stock = False
+            if cart_book_type == 'Used':
+                if int(book[bp.STOCK]) <= 0:
+                    stock = False
+            if cart_book_type == 'Rent':
+                if int(book[bp.STOCK]) <= 0:
+                    stock = False
+        return stock

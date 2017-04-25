@@ -1,0 +1,14 @@
+Date placed: 2017-04-25
+Payment type: Credit Card
+---Shipping---
+Name: Ted Cruz
+Address: 420 Washington Ave.
+State: Washington
+City: Some City
+Zip: 15798
+---Books---
+978-0132492676: A Gift of Fire: Social, Legal, and Ethical Issues for Computing Technology 4th Edition (New) $93.57 X 1
+---Financial---
+Subtotal: 93.57
+Sales tax: 7.5992
+Total: 116.1592

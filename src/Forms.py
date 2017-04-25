@@ -52,3 +52,5 @@ class CheckoutForm(Form):
     shipping_city = StringField(u'City', validators=[validators.Required()], filters=[lambda x: x or None], id="shipping_city")
     shipping_state = StringField(u'State', validators=[validators.Required()], filters=[lambda x: x or None], id="shipping_state")
     shipping_zip = StringField(u'ZIP', validators=[validators.Required(), validators.Length(min=5, max=5)], filters=[lambda x: x or None], id="shipping_zip")
+    #Email address for receipt
+    email = StringField(u'Email', validators=[validators.Optional(), validators.Email()], filters=[lambda x: x or None], id="email")

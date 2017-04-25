@@ -270,9 +270,15 @@
               });
             });
           </script>
-          <div class="col-md-1 col-md-offset-4">
-            <br><br><input type="submit" value="Checkout" />
+        </div>
+        <div class="row">
+          <br><br>
+          <div class="col-md-4 col-md-offset-4">
+            {{ billing_form.email(size=75, placeholder="Email...") }}<br><br>
           </div>
+        </div>
+        <div class="col-md-1 col-md-offset-9">
+          <input type="submit" value="Checkout" />
         </div>
       </form>
 

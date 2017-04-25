@@ -3,7 +3,7 @@
 {% block content %}
   {% if results %}
     {% for book_row in results | batch(2) %}
-    <div class="row">
+    <div class="row" style="margin-left: 50px; ">
       {% for book in book_row %}
       {% set isbn = book[0] %}
       {% set name = book[1] %}
@@ -17,7 +17,7 @@
       {% set price_rent = book[15] %}
       {% set price_ebook = book[16] %}
       {% set description = book[17] %}
-        <div class="col-md-5" style="margin-left: 100px; margin-top: 20px">
+        <div class="col-md-5" style="margin-top: 20px">
           <div class="col-md-1">
               <img src="static/covers/{{ isbn }}.jpg" height="150" width="100" alt="{{ name }}">
           </div>
@@ -40,7 +40,7 @@
                     ISBN: {{ isbn}}  |  Author: {{ author }}<br>
                     Price: ${{ price_new }} (New)  |  ${{ price_used }} (Used)  |  ${{ price_rent }} (Rent)  |  {{ ebook }} (E-book)<br>
                     Stock: {{stock_new }} (New)  |  {{ stock_used }} (Used)  |  {{ stock_rent }} (Rent)  |  {{ e_stock }} (E-book)<br>
-                    <b>{{ description | truncate(250) }}</b>
+                    <b>{{ description | truncate(150) }}</b>
                     <form action="/cart/add" method="post">
                       {{ bookform.types(choices=types) }}
                       <input type="submit" value="Add to cart">

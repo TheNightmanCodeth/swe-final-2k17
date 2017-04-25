@@ -25,7 +25,7 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <p>{{ book[0] }}</p>
+            <p>ISBN: {{ book[0] }}</p>
           </div>
         </div>
       </div>
@@ -59,29 +59,24 @@
           {% endif %}
           <p style="center-text: true">Prices</p>
           <p style="center-text: true">New: {{ new_price }} &nbsp; Used: {{ used_price }} &nbsp; Rental: {{ rent_price }} &nbsp; E-Book: {{ e_price }}</p><br><br>
-          {% set types = [] %}
           {% if book[9] == '0' %}
             {% set new_stock = 'N/A' %}
           {% else %}
-            {{ types.append('New') }}
             {% set new_stock = book[9] %}
           {% endif %}
           {% if book[10] == '0' %}
             {% set used_stock = 'N/A' %}
           {% else %}
-            {{ types.append('Used') }}
             {% set used_stock = book[10] %}
           {% endif %}
           {% if book[11] == '0' %}
             {% set rent_stock = 'N/A' %}
           {% else %}
-            {{ types.append('Rent') }}
             {% set rent_stock = book[11] %}
           {% endif %}
           {% if book[12] == '0' %}
             {% set e_stock = 'N/A' %}
           {% else %}
-            {{ types.append('E-book') }}
             {% set e_stock = 'YES' %}
           {% endif %}
           <p style="text-center: true">Stock</p>

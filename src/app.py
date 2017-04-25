@@ -1,12 +1,24 @@
 ''' This file is where we define all routes and site-related logic'''
 from flask import Flask, render_template, url_for, request, redirect, session, flash
 from Forms import SearchForm, BookTypeForm, ShoppingCartForm, CheckoutForm
+from flask_mail import Mail, Message
 from BookParser import BookParser
 from ShoppingCart import ShoppingCart
 from InvoiceFactory import InvoiceFactory
 
 app = Flask(__name__)
+mail = Mail(app)
 app.secret_key = '(-)<(Yo*u(*&)+-los&t*+th(e//+_ga$me)'
+
+app.config.update(
+        MAIL_SERVER='smtp.gmail.com',
+        MAIL_PORT='465',
+        MAIL_USE_SSL=True,
+        MAIL_USERNAME='mailer.ksubooks@gmail.com',
+        MAIL_PASSWORD='kennesaw420*'
+)
+
+mail = Mail(app)
 
 bp = BookParser()
 sc = ShoppingCart()
@@ -172,7 +184,8 @@ def rem_from_cart():
 def show_cart():
     cart_count = sc.get_cart_size()
     subtotal = sc.get_cart_subtotal()
-    tax = subtotal * .07
+    sub_ship = subtotal + 14.99
+    tax = sub_ship * .07
     cartform = ShoppingCartForm(request.form)
     form = SearchForm(request.form)
     return render_template('shoppingcart.html', cart=session['cart'], form=form, cartform=cartform, cart_count=cart_count, subtotal=subtotal, tax=round(tax, 2))
@@ -186,6 +199,7 @@ def checkout():
         if checkout_form.validate():
             '''Get invoice dictionary'''
             invoice_dict = inv_factory.checkout_to_invoice(checkout_form)
+            invoice = invoice_dict
             #Validate login data
             if invoice_dict['type'] == 'fa':
                 #Make sure user exists, and has enough money
@@ -197,33 +211,61 @@ def checkout():
                     if checkout_form.fa_login.data == user[2]:
                         if checkout_form.fa_password.data == user[3]:
                             st = sc.get_cart_subtotal()
-                            tax = st * .07
-                            total = st+14.99+tax
+                            st_sh = st + 14.99
+                            tax = st_sh * .07
+                            total = st_sh+14.99+tax
                             if float(user[4]) > total:
                                 '''Write to invoice file'''
                                 inv_factory.write_to_file(invoice_dict)
                                 search_form = SearchForm(request.form)
-                                subtotal = sc.get_cart_subtotal()
-                                tax = subtotal * .07
+                                st = sc.get_cart_subtotal()
+                                st_sh = st + 14.99
+                                tax = st_sh * .07
+
+                                list_string = ''
                                 for entry in sc.get_cart():
                                     book = entry['book']
                                     type = entry['type']
                                     count = entry['count']
+                                    if type == 'E-book':
+                                        string_to_add = "%s x %s (%s)\nDownload: https://ebooksrus.com/%s/download.php" % (book[1], str(count), type, book[0])
+                                    else:
+                                        string_to_add = "%s x %s (%s)\n" % (book[1], str(count), type)
+                                    list_string += string_to_add
                                     bp.update_stock(book[0], type, count)
+
+                                email = checkout_form.email.data
+                                name = invoice['ship_name']
+                                addr = invoice['ship_addr']
+                                city = invoice['ship_city']
+                                state = invoice['ship_state']
+                                zip = invoice['ship_zip']
+                                addr_string = "%s\n%s\n%s, %s %s" % (name, addr, city, state, zip)
+                                #Send receipt as email
+                                message = "%s,\nHere is your receipt for your recent purchase on the KSU online bookstore.\n\nBooks purchased: \n%s\n\nShipped to:\n%s" % (name, str(list_string), addr_string)
+                                msg = Message(
+                                    'Your KSU Books Receipt',
+                                    sender='KSUBooksMailer',
+                                    recipients=[email])
+                                msg.body = message
+                                mail.send(msg)
+
                                 return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
                             else:
                                 errors= ['Insufficient funds!']
                                 search_form = SearchForm(request.form)
-                                subtotal = sc.get_cart_subtotal()
-                                tax = subtotal * .07
+                                st = sc.get_cart_subtotal()
+                                st_sh = st + 14.99
+                                tax = st_sh * .07
                                 payment_type = request.args.get('payment')
                                 billing_form = CheckoutForm(request.form)
                                 return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
                         else:
                             errors= ['Incorrect login!']
                             search_form = SearchForm(request.form)
-                            subtotal = sc.get_cart_subtotal()
-                            tax = subtotal * .07
+                            st = sc.get_cart_subtotal()
+                            st_sh = st + 14.99
+                            tax = st_sh * .07
                             payment_type = request.args.get('payment')
                             billing_form = CheckoutForm(request.form)
                             return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
@@ -234,19 +276,45 @@ def checkout():
                     '''Write to invoice file'''
                     inv_factory.write_to_file(invoice_dict)
                     search_form = SearchForm(request.form)
-                    subtotal = sc.get_cart_subtotal()
-                    tax = subtotal * .07
+                    st = sc.get_cart_subtotal()
+                    st_sh = st + 14.99
+                    tax = st_sh * .07
+
+                    list_string = ''
                     for entry in sc.get_cart():
                         book = entry['book']
                         type = entry['type']
                         count = entry['count']
+                        if type == 'E-book':
+                            string_to_add = "%s x %s (%s)\nDownload: https://ebooksrus.com/%s/download.php" % (book[1], str(count), type, book[0])
+                        else:
+                            string_to_add = "%s x %s (%s)\n" % (book[1], str(count), type)
+                        list_string += string_to_add
                         bp.update_stock(book[0], type, count)
+
+                    email = checkout_form.email.data
+                    name = invoice['ship_name']
+                    addr = invoice['ship_addr']
+                    city = invoice['ship_city']
+                    state = invoice['ship_state']
+                    zip = invoice['ship_zip']
+                    addr_string = "%s\n%s\n%s, %s %s" % (name, addr, city, state, zip)
+                    #Send receipt as email
+                    message = "%s,\nHere is your receipt for your recent purchase on the KSU online bookstore.\n\nBooks purchased: \n%s\n\nShipped to:\n%s" % (name, str(list_string), addr_string)
+                    msg = Message(
+                        'Your KSU Books Receipt',
+                        sender='KSUBooksMailer',
+                        recipients=[email])
+                    msg.body = message
+                    mail.send(msg)
+
                     return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
                 else:
                     errors= ['Incorrect login!']
                     search_form = SearchForm(request.form)
-                    subtotal = sc.get_cart_subtotal()
-                    tax = subtotal * .07
+                    st = sc.get_cart_subtotal()
+                    st_sh = st + 14.99
+                    tax = st_sh * .07
                     payment_type = request.args.get('payment')
                     billing_form = CheckoutForm(request.form)
                     return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
@@ -256,19 +324,43 @@ def checkout():
                     '''Write to invoice file'''
                     inv_factory.write_to_file(invoice_dict)
                     search_form = SearchForm(request.form)
-                    subtotal = sc.get_cart_subtotal()
-                    tax = subtotal * .07
-                    for entry in session['cart']:
+                    st = sc.get_cart_subtotal()
+                    st_sh = st + 14.99
+                    tax = st_sh * .07
+                    list_string = ''
+                    for entry in sc.get_cart():
                         book = entry['book']
                         type = entry['type']
                         count = entry['count']
+                        if type == 'E-book':
+                            string_to_add = "%s x %s (%s)\nDownload: https://ebooksrus.com/%s/download.php" % (book[1], str(count), type, book[0])
+                        else:
+                            string_to_add = "%s x %s (%s)\n" % (book[1], str(count), type)
+                        list_string += string_to_add
                         bp.update_stock(book[0], type, count)
+
+                    email = checkout_form.email.data
+                    name = invoice['ship_name']
+                    addr = invoice['ship_addr']
+                    city = invoice['ship_city']
+                    state = invoice['ship_state']
+                    zip = invoice['ship_zip']
+                    addr_string = "%s\n%s\n%s, %s %s" % (name, addr, city, state, zip)
+                    #Send receipt as email
+                    message = "%s,\nHere is your receipt for your recent purchase on the KSU online bookstore.\n\nBooks purchased: \n%s\n\nShipped to:\n%s" % (name, str(list_string), addr_string)
+                    msg = Message(
+                        'Your KSU Books Receipt',
+                        sender='KSUBooksMailer',
+                        recipients=[email])
+                    msg.body = message
+                    mail.send(msg)
                     return render_template('receipt.html', invoice=invoice_dict, cart=session['cart'], form=search_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
                 else:
                     errors= ['Card declined- check CVV!']
                     search_form = SearchForm(request.form)
-                    subtotal = sc.get_cart_subtotal()
-                    tax = subtotal * .07
+                    st = sc.get_cart_subtotal()
+                    st_sh = st + 14.99
+                    tax = st_sh * .07
                     payment_type = request.args.get('payment')
                     billing_form = CheckoutForm(request.form)
                     return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
@@ -280,21 +372,32 @@ def checkout():
                     form_errors.append(u"Error: %s - %s" % (getattr(checkout_form, field).label.text, error))
 
             search_form = SearchForm(request.form)
-            subtotal = sc.get_cart_subtotal()
-            tax = subtotal * .07
+            st = sc.get_cart_subtotal()
+            st_sh = st + 14.99
+            tax = st_sh * .07
 
             payment_type = request.args.get('payment')
             billing_form = CheckoutForm(request.form)
             return render_template('checkout.html', payment=payment_type, cart=session['cart'], errors=form_errors, form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
     else:
         search_form = SearchForm(request.form)
-        subtotal = sc.get_cart_subtotal()
-        tax = subtotal * .07
+        st = sc.get_cart_subtotal()
+        st_sh = st + 14.99
+        tax = st_sh * .07
 
         payment_type = request.args.get('payment')
         billing_form = CheckoutForm(request.form)
 
         return render_template('checkout.html', payment=payment_type, cart=session['cart'], form=search_form, billing_form=billing_form, cart_count=sc.get_cart_size(), subtotal=sc.get_cart_subtotal(), tax=round(tax, 2))
+
+#Sends email to provided address
+def send_email(msg, adr):
+    msg = Message(
+        'Your KSU Books Receipt',
+        sender='KSUBooksMailer',
+        recipients=[adr])
+    msg.body = msg
+    mail.send(msg)
 
 #Route for book details page
 @app.route('/book/<isbn>', methods=['GET'])
