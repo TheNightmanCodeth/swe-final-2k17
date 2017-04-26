@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+</head>
+
+<body style="background-color:#cccccc">
+<div class="row" style="margin-top: 50px;">
+  <div class="col-md-2" style="margin-top: 25px; margin-left: 50px">
+    <a href="/">
+      <img src="http://styleguide.kennesaw.edu/images/KSU-Mountain-Logo.png" alt="KSU_LOGO">
+    </a>
+    <p>Online Bookstore</p>
+  </div>
+  <!--         _
+           .__(.)<  (MEOW)
+            \___)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+  <div class="col-md-6 col-md-offset-1">
+    <form action="/" method="post">
+      {{ form.csrf_token }}
+      {{ form.isbn(size=30, placeholder="ISBN") }}
+      {{ form.prof() }}<br><br>
+      {{ form.title(size=30, placeholder="Title") }}
+      {{ form.classs() }}<br><br>
+      {{ form.keyword(size=30, placeholder="Keyword") }}
+      {{ form.author(size=30, placeholder="Author") }}
+      <input type="submit" value="Search">
+    </form><br><br>
+  </div>
+  <div class="col-md-2">
+    <div class="row">
+      <p>
+        <a href="/faq">FAQ</a>  |  <a href="/contact">Contact</a>  |  <a href="/about">About</a>
+      </p>
+    </div>
+    <div class="row">
+      <!-- this looks dumb
+        <div class="col-md-1">
+          <img src="/static/img/cart.png" width=12 height=12/>
+        </div>
+      -->
+      <div class="col-md-6" style="margin-left: 80px">
+        <a href="/cart">Cart ({{ cart_count }})</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block content %}
+{% endblock %}
+</body>
+
+<span style="margin-top: 25px"><h3> </h3></span>

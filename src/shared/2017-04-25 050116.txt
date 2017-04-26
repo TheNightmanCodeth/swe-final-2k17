@@ -1,0 +1,14 @@
+Date placed: 2017-04-25
+Payment type: Financial Aid
+---Shipping---
+Name: Test Person
+Address: 123 Road St.
+State: Georgia
+City: City Town
+Zip: 12345
+---Books---
+978-1449691998: Essentials of Software Engineering 3rd Edition (E-book) $103.96 X 1
+---Financial---
+Subtotal: 103.96
+Sales tax: 8.3265
+Total: 127.2765
