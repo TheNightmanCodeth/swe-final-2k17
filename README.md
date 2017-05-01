@@ -1,4 +1,4 @@
-# PYHTON BITCHES!!!!!!!!  
+# PYHTON!!!!!!!!  
 No time for VS BS amirite?!?
 
 # TDD
@@ -81,10 +81,10 @@ class BookParser:
     # This is a method:
     def this_is_a_method(self):
         #Make sure to indent after the method dec.
-        print 'Fuck'
+        print 'Yes'
         #If the method returns a value, just return it.
         #You don't need to define return types anywhere!
-        return 'Fuck'
+        return 'Yes'
 ```
 
 Methods within a class need to take `self` as an argument. This is not reflected in any method calls, though.
